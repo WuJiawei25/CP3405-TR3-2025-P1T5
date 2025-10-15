@@ -1,7 +1,7 @@
 /*
-Author:Chu Junjie
-Date:09/10/2025
-File Name:styles.css
+Author: Chu Junjie
+Date: 09/10/2025
+File Name: styles.css
 */
 
 * {
@@ -18,7 +18,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 容器布局 */
+/* Container layout */
 .container {
   display: flex;
   align-items: stretch;
@@ -26,7 +26,7 @@ body {
   min-height: 100vh;
 }
 
-/* 左侧区域样式 */
+/* Left section styles */
 .left-section {
   flex: 1;
   position: relative;
@@ -35,7 +35,7 @@ body {
   overflow: hidden;
 }
 
-/* 主椅子图片 */
+/* Main chair image */
 .main-chair-image {
   width: 100%;
   height: 100vh;
@@ -44,7 +44,7 @@ body {
   filter: grayscale(100%);
 }
 
-/* 菜单按钮 */
+/* Menu button */
 .menu-btn {
   position: absolute;
   top: 2rem;
@@ -64,7 +64,7 @@ body {
   font-weight: 500;
 }
 
-/* 中央品牌标识 */
+/* Central brand logo */
 .center-content {
   position: absolute;
   top: 50%;
@@ -88,7 +88,7 @@ body {
   color: #ffffff;
 }
 
-/* 社交图标 */
+/* Social media icons */
 .social-icons {
   position: absolute;
   bottom: 2rem;
@@ -118,7 +118,7 @@ body {
   transform: translateY(-3px);
 }
 
-/* 右侧登录区域 */
+/* Right login section */
 .right-section {
   flex: 1;
   display: flex;
@@ -131,7 +131,7 @@ body {
   justify-content: center;
 }
 
-/* 登录标题 */
+/* Login title */
 .login-title {
   font-size: 2rem;
   color: #222;
@@ -144,7 +144,7 @@ body {
   font-size: 1.1rem;
 }
 
-/* 账户卡片 */
+/* Account card */
 .account-card {
   display: flex;
   align-items: center;
@@ -191,7 +191,7 @@ body {
   text-decoration: underline;
 }
 
-/* 其他账户登录 */
+/* Other account login */
 .other-account {
   display: flex;
   align-items: center;
@@ -224,7 +224,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* 注册链接 */
+/* Registration link */
 .signup-link {
   display: flex;
   align-items: center;
@@ -253,7 +253,7 @@ body {
   text-decoration: underline;
 }
 
-/* 响应式设计 - 适配移动设备 */
+/* Responsive design - adapt to mobile devices */
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
