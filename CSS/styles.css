@@ -18,16 +18,19 @@ body {
   overflow-x: hidden;
 }
 
-/* Container layout */
-.container {
+/* ------------------ Generic Container ------------------ */
+.container,
+.profile-container {
   display: flex;
-  align-items: stretch;
   justify-content: space-between;
+  align-items: stretch;
   min-height: 100vh;
+  flex-wrap: nowrap;
 }
 
-/* Left section styles */
-.left-section {
+/* ------------------ Left Image Section ------------------ */
+.left-section,
+.profile-left {
   flex: 1;
   position: relative;
   max-width: 600px;
@@ -35,7 +38,6 @@ body {
   overflow: hidden;
 }
 
-/* Main chair image */
 .main-chair-image {
   width: 100%;
   height: 100vh;
@@ -44,16 +46,21 @@ body {
   filter: grayscale(100%);
 }
 
-/* Menu button */
-.menu-btn {
+/* ------------------ Common Absolute Elements ------------------ */
+.menu-btn,
+.center-content,
+.social-icons {
   position: absolute;
+  z-index: 10;
+}
+
+.menu-btn {
   top: 2rem;
   left: 2rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   color: #ffffff;
-  z-index: 10;
 }
 
 .menu-icon {
@@ -64,14 +71,11 @@ body {
   font-weight: 500;
 }
 
-/* Central brand logo */
 .center-content {
-  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  z-index: 10;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -88,15 +92,12 @@ body {
   color: #ffffff;
 }
 
-/* Social media icons */
 .social-icons {
-  position: absolute;
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 1rem;
-  z-index: 10;
 }
 
 .social-icon {
@@ -118,20 +119,21 @@ body {
   transform: translateY(-3px);
 }
 
-/* Right login section */
-.right-section {
+/* ------------------ Right Section (Login + Profile Shared) ------------------ */
+.right-section,
+.profile-right {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  justify-content: center;
+  align-items: stretch;
   padding: 2rem 3rem;
   max-width: 1000px;
+  min-height: 100vh;
   margin-left: auto;
-  align-items: stretch;
-  justify-content: center;
 }
 
-/* Login title */
+/* ------------------ Login Page ------------------ */
 .login-title {
   font-size: 2rem;
   color: #222;
@@ -144,7 +146,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* Account card */
 .account-card {
   display: flex;
   align-items: center;
@@ -191,7 +192,6 @@ body {
   text-decoration: underline;
 }
 
-/* Other account login */
 .other-account {
   display: flex;
   align-items: center;
@@ -224,7 +224,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Registration link */
+/* Sign-up Link */
 .signup-link {
   display: flex;
   align-items: center;
@@ -253,24 +253,212 @@ body {
   text-decoration: underline;
 }
 
-/* Responsive design - adapt to mobile devices */
-@media (max-width: 900px) {
-  .container {
+/* ------------------ Profile Page ------------------ */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.social-icons a {
+    color: #6c757d;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* 中心内容 */
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 2rem 0;
+}
+
+/* 个人资料卡片 */
+.profile-card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: clamp(1.5rem, 5%, 2.5rem);
+    width: 100%;
+    max-width: 500px;
+    transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+}
+
+/* 个人资料头部 */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.profile-pic-container {
+    position: relative;
+}
+
+.profile-pic {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0d6efd;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.3rem;
+}
+
+.profile-email {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+/* 个人资料统计 */
+.profile-stats {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-weight: 700;
+    color: #212529;
+    font-size: 1.2rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* 个人简介 */
+.profile-bio {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.profile-bio h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: #212529;
+}
+
+.profile-bio p {
+    color: #495057;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* 操作按钮 */
+.profile-actions {
+    display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    gap: 1rem;
+}
+
+.profile-btn {
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #0d6efd;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+/* 返回按钮 */
+.back-btn {
+    align-self: center;
+    padding: 0.75rem 1.5rem;
+    background-color: transparent;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* ------------------ Responsive ------------------ */
+@media (max-width: 900px) {
+  .container,
+  .profile-container {
+    flex-direction: column;
   }
 
-  .left-section {
+  .left-section,
+  .profile-left {
     width: 100%;
-    min-height: 40vh;
-    max-height: none;
+    min-height: 35vh;
   }
 
-  .right-section {
+  .right-section,
+  .profile-right {
     width: 100%;
-    min-height: 60vh;
-    max-width: none;
+    min-height: 65vh;
     padding: 2rem 1.5rem;
     margin-left: 0;
+  }
+
+  .profile-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
   }
 }
