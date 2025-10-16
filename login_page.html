@@ -37,19 +37,22 @@
 
       <div class="account-card">
         <img src="Images/account-avatar.png" alt="Hamid's avatar" class="account-avatar">
-        <div class="account-greeting">Welcome back, Hamid</div>
+        <a href="profile_page.html" class="account-greeting-link">
+          <div class="account-greeting">Welcome back, Hamid</div>
+        </a>
         <button class="remove-btn">Remove</button>
       </div>
 
-      
+
       <div class="other-account">
         <span class="other-account-text">Login to a different account</span>
-        <button class="login-btn">Login ></button>
+        <button class="login-btn" style="background-color: #007bff; color: white;"
+        onclick="window.location.href='seat-selection.html'">Login ></button>
       </div>
       <hr class="divider">
       <div class="signup-link">
         <span class="signup-text">Don't have an account?</span>
-        <button class="signup-btn">Sign up</button>
+        <a href="signup.html" class="signup-btn">Sign up</a>
       </div>
     </div>
   </div>
