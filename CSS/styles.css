@@ -1,6 +1,6 @@
 /*
 Author: Chu Junjie
-Date: 09/10/2025
+Date: 10/10/2025
 File Name: styles.css
 */
 
@@ -16,11 +16,11 @@ body {
   color: #333;
   line-height: 1.6;
   overflow-x: hidden;
+  background-color: var(--gray-50);
+  color: var(--gray-800);
 }
 
-/* ------------------ Generic Container ------------------ */
-.container,
-.profile-container {
+.container, .profile-container {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -28,9 +28,7 @@ body {
   flex-wrap: nowrap;
 }
 
-/* ------------------ Left Image Section ------------------ */
-.left-section,
-.profile-left {
+.left-section, .profile-left {
   flex: 1;
   position: relative;
   max-width: 600px;
@@ -46,10 +44,7 @@ body {
   filter: grayscale(100%);
 }
 
-/* ------------------ Common Absolute Elements ------------------ */
-.menu-btn,
-.center-content,
-.social-icons {
+.menu-btn, .center-content, .social-icons {
   position: absolute;
   z-index: 10;
 }
@@ -79,6 +74,9 @@ body {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 2rem 0;
 }
 
 .fingerprint-icon {
@@ -97,31 +95,32 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 1rem;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.social-icon {
-  width: 2.2rem;
-  height: 2.2rem;
+.social-icons a {
+  color: #6c757d;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
   text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-.social-icon:hover {
-  background-color: #0066cc;
-  color: #fff;
+.social-icons a:hover {
+  background-color: #0d6efd;
+  color: white;
   transform: translateY(-3px);
 }
 
-/* ------------------ Right Section (Login + Profile Shared) ------------------ */
-.right-section,
-.profile-right {
+.right-section, .profile-right {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -133,7 +132,6 @@ body {
   margin-left: auto;
 }
 
-/* ------------------ Login Page ------------------ */
 .login-title {
   font-size: 2rem;
   color: #222;
@@ -174,6 +172,17 @@ body {
   font-size: 1.1rem;
   font-weight: 500;
   color: #333;
+}
+
+.account-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.account-greeting-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .remove-btn {
@@ -224,7 +233,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Sign-up Link */
 .signup-link {
   display: flex;
   align-items: center;
@@ -253,198 +261,859 @@ body {
   text-decoration: underline;
 }
 
-/* ------------------ Profile Page ------------------ */
-.social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.social-icons a {
-    color: #6c757d;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.social-icons a:hover {
-    background-color: #0d6efd;
-    color: white;
-    transform: translateY(-3px);
-}
-
-/* 中心内容 */
-.center-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    padding: 2rem 0;
-}
-
-/* 个人资料卡片 */
 .profile-card {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: clamp(1.5rem, 5%, 2.5rem);
-    width: 100%;
-    max-width: 500px;
-    transition: transform 0.3s ease;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: clamp(1.5rem, 5%, 2.5rem);
+  width: 100%;
+  max-width: 500px;
+  transition: transform 0.3s ease;
 }
 
 .profile-card:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
-/* 个人资料头部 */
 .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .profile-pic-container {
-    position: relative;
+  position: relative;
 }
 
 .profile-pic {
-    width: 8rem;
-    height: 8rem;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #0d6efd;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #0d6efd;
 }
 
 .profile-info {
-    flex: 1;
+  flex: 1;
 }
 
 .profile-name {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #212529;
-    margin-bottom: 0.3rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.3rem;
 }
 
 .profile-email {
-    color: #6c757d;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
-/* 个人资料统计 */
 .profile-stats {
-    display: flex;
-    gap: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
 }
 
 .stat-item {
-    text-align: center;
+  text-align: center;
 }
 
 .stat-number {
-    display: block;
-    font-weight: 700;
-    color: #212529;
-    font-size: 1.2rem;
+  display: block;
+  font-weight: 700;
+  color: #212529;
+  font-size: 1.2rem;
 }
 
 .stat-label {
-    font-size: 0.85rem;
-    color: #6c757d;
+  font-size: 0.85rem;
+  color: #6c757d;
 }
 
-/* 个人简介 */
 .profile-bio {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e9ecef;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
 }
 
 .profile-bio h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
-    color: #212529;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: #212529;
 }
 
 .profile-bio p {
-    color: #495057;
-    line-height: 1.6;
-    font-size: 0.95rem;
+  color: #495057;
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
-/* 操作按钮 */
 .profile-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .profile-btn {
-    padding: 0.8rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    background-color: #0d6efd;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #0d6efd;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .profile-btn:hover {
-    background-color: #0b5ed7;
-    transform: translateY(-2px);
+  background-color: #0b5ed7;
+  transform: translateY(-2px);
 }
 
-/* 返回按钮 */
 .back-btn {
-    align-self: center;
-    padding: 0.75rem 1.5rem;
-    background-color: transparent;
-    color: #0d6efd;
-    border: 1px solid #0d6efd;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    margin-bottom: 1rem;
+  align-self: center;
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  color: #0d6efd;
+  border: 1px solid #0d6efd;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
 }
 
 .back-btn:hover {
-    background-color: #0d6efd;
-    color: white;
+  background-color: #0d6efd;
+  color: white;
 }
 
-/* ------------------ Responsive ------------------ */
+.signup-form {
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-top: -2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.form-group input:focus::placeholder {
+  color: #ccc;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 1.5rem 0;
+}
+
+.login-option {
+  text-align: center;
+}
+
+.login-link {
+  color: #0d6efd;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: #0b5ed7;
+  text-decoration: underline;
+}
+
+.location-content {
+  padding: 1.5rem;
+}
+
+.location-question {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #222;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.map-outer-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.map-container {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 500px;
+}
+
+.map-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 1rem;
+  margin: 0 auto;
+}
+
+.map-controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.map-control-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.map-control-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.view-larger-map {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: white;
+  color: #0d6efd;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.view-larger-map:hover {
+  background-color: #f8f9fa;
+  text-decoration: underline;
+}
+
+.location-info {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.location-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.location-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.primary-btn, .secondary-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  width: 180px;
+  margin: 0 auto;
+}
+
+.primary-btn {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  background-color: #212529;
+  color: white;
+}
+
+.secondary-btn:hover {
+  background-color: #343a40;
+  transform: translateY(-2px);
+}
+
+:root {
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  --accent-blue: #3b82f6;
+  --accent-green: #10b981;
+  --accent-purple: #8b5cf6;
+  --accent-red: #ef4444;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07);
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main-header {
+  background-color: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: var(--gray-100);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: auto;
+}
+
+.logo-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--gray-700);
+  color: white;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-button {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  font-size: 1.25rem;
+  cursor: pointer;
+  position: relative;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.notification-button:hover {
+  background-color: var(--gray-100);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--accent-red);
+  border-radius: 50%;
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--gray-200);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lecture-info-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.lecture-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 1rem;
+}
+
+.lecture-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+.detail-item i {
+  color: var(--gray-500);
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-button {
+  background-color: white;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-700);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-button:hover {
+  border-color: var(--gray-400);
+  background-color: var(--gray-50);
+}
+
+.filter-button.active {
+  background-color: var(--gray-700);
+  color: white;
+  border-color: var(--gray-700);
+}
+
+.seat-map-section {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.instructor-area {
+  width: 80%;
+  height: 3rem;
+  background-color: var(--gray-100);
+  border-radius: 0.5rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.seat-grid-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.row-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-right: 1rem;
+}
+
+.row-labels div {
+  width: 1.5rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.seats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.seat-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.aisle {
+    width: 40px;
+    background-color: #f0f0f0;
+    border: 1px dashed #ccc;
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #666;
+}
+.seat {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.seat:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+.seat.available {
+  background-color: var(--gray-200);
+  border: 1px solid var(--gray-300);
+}
+
+.seat.booked {
+  background-color: var(--gray-400);
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  background-color: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+}
+
+.seat.accessible {
+  background-color: var(--gray-200);
+  border: 1px solid var(--accent-purple);
+}
+
+.seat.quiet {
+  background-color: var(--gray-200);
+  border: 1px solid var(--accent-green);
+}
+
+.seat-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  color: var(--gray-700);
+}
+
+.column-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-left: 1rem;
+}
+
+.column-labels div {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.exit-area {
+  width: 40%;
+  height: 2.5rem;
+  background-color: var(--gray-100);
+  border-radius: 0.5rem;
+  margin: 2rem auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.legend-color {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.legend-color.available {
+  background-color: var(--gray-200);
+  border: 1px solid var(--gray-300);
+}
+
+.legend-color.selected {
+  background-color: var(--accent-blue);
+}
+
+.legend-color.booked {
+  background-color: var(--gray-400);
+}
+
+.legend-color.accessible {
+  background-color: var(--gray-200);
+  border: 1px solid var(--accent-purple);
+  color: var(--accent-purple);
+}
+
+.legend-color.quiet {
+  background-color: var(--gray-200);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+}
+
+.selected-seat-info {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+.info-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.info-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.info-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+}
+
+.info-label {
+  width: 30%;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  width: 70%;
+  color: var(--gray-800);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.confirm-button {
+  width: 100%;
+  background-color: var(--gray-700);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirm-button:hover {
+  background-color: var(--gray-800);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.confirm-button:active {
+  transform: translateY(0);
+}
+
+.main-footer {
+  background-color: white;
+  border-top: 1px solid var(--gray-200);
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-logo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--gray-900);
+  text-decoration: underline;
+}
+
+.footer-copyright {
+  color: var(--gray-500);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
-  .container,
-  .profile-container {
+  .container, .profile-container {
     flex-direction: column;
   }
 
-  .left-section,
-  .profile-left {
+  .left-section, .profile-left {
     width: 100%;
     min-height: 35vh;
   }
 
-  .right-section,
-  .profile-right {
+  .right-section, .profile-right {
     width: 100%;
     min-height: 65vh;
     padding: 2rem 1.5rem;
@@ -460,5 +1129,31 @@ body {
     flex-direction: column;
     text-align: center;
     gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .seat {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .filter-controls {
+    width: 100%;
+  }
+
+  .filter-button {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .lecture-details {
+    gap: 1rem;
+  }
+
+  .detail-item {
+    flex: 1 1 40%;
   }
 }
