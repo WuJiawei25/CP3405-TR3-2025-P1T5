@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Seat Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="CSS/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-section">
+      <div class="menu-btn">
+        <i class="fas fa-bars menu-icon"></i>
+        <span class="menu-text">Menu</span>
+      </div>
+
+      <img src="Images/main-chair-image.png" alt="smart seat" class="main-chair-image">
+
+      <div class="center-content">
+        <i class="fas fa-fingerprint fingerprint-icon"></i>
+        <div class="take-seat">Take a seat</div>
+      </div>
+
+      <div class="social-icons">
+        <a href="https://facebook.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://instagram.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+        <a href="https://twitter.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <h2 class="login-title">Login</h2>
+      <p class="login-subtitle">Please select your account</p>
+
+      <div class="account-card">
+        <img src="Images/account-avatar.png" alt="Hamid's avatar" class="account-avatar">
+        <a href="profile_page.html" class="account-greeting-link">
+          <div class="account-greeting">Welcome back, Hamid</div>
+        </a>
+        <button class="remove-btn">Remove</button>
+      </div>
+
+      
+      <div class="other-account">
+        <span class="other-account-text">Login to a different account</span>
+        <button class="login-btn" style="background-color: #007bff; color: white;" 
+        onclick="window.location.href='seat-selection.html'">Login ></button>
+      </div>
+      <hr class="divider">
+      <div class="signup-link">
+        <span class="signup-text">Don't have an account?</span>
+        <a href="signup.html" class="signup-btn">Sign up</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
