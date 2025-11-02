@@ -10,20 +10,18 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container no-scroll-container">
+    <img src="Images/jcu-logo.png" alt="JCU Logo" class="jcu-logo">
     <div class="left-section">
       <div class="menu-btn">
         <i class="fas fa-bars menu-icon"></i>
         <span class="menu-text">Menu</span>
       </div>
-
       <img src="Images/main-chair-image.png" alt="smart seat" class="main-chair-image">
-
       <div class="center-content">
         <i class="fas fa-fingerprint fingerprint-icon"></i>
-        <div class="take-seat">Take a seat</div>
+        <div class="take-seat">SmartSeat</div>
       </div>
-
       <div class="social-icons">
         <a href="https://facebook.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
         <a href="https://instagram.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
@@ -35,25 +33,19 @@
       <h2 class="login-title">Login</h2>
       <p class="login-subtitle">Please select your account</p>
 
-      <div class="account-card">
+      <div class="card account-card">
         <img src="Images/account-avatar.png" alt="Hamid's avatar" class="account-avatar">
-        <a href="profile_page.html" class="account-greeting-link">
-          <div class="account-greeting">Welcome back, Hamid</div>
-        </a>
-        <button class="remove-btn">Remove</button>
+        <div class="account-greeting">Welcome back, Hamid</div>
       </div>
 
-
+      
       <div class="other-account">
         <span class="other-account-text">Login to a different account</span>
-        <button class="login-btn" style="background-color: #007bff; color: white;"
-        onclick="window.location.href='seat-selection.html'">Login ></button>
+        <button class="login-btn" onclick="window.location.href='B02_home.html'">Login -></button>
       </div>
-      <hr class="divider">
-      <div class="signup-link">
-        <span class="signup-text">Don't have an account?</span>
-        <a href="signup.html" class="signup-btn">Sign up</a>
-      </div>
+      <a href="A01_signin_credentials.html" class="get">
+        <button class="remove-btn">Remove</button>
+      </a>
     </div>
   </div>
 </body>

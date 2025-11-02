@@ -6,24 +6,31 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="CSS/styles.css">
+    <script src="Form/signup-validation.js"></script>
 </head>
 <body>
-    <div class="container">
-
+    <div class="container no-scroll-container">
+        <img src="Images/jcu-logo.png" alt="JCU Logo" class="jcu-logo">
         <div class="left-section">
-            <img src="Images/main-chair-image.png" alt="smart seat" class="main-chair-image">
             <div class="menu-btn">
-                <i class="fas fa-bars"></i>
+                <i class="fas fa-bars menu-icon"></i>
                 <span class="menu-text">Menu</span>
             </div>
+            <img src="Images/main-chair-image.png" alt="smart seat" class="main-chair-image">
+            <div class="center-content">
+                <i class="fas fa-fingerprint fingerprint-icon"></i>
+                <div class="take-seat">SmartSeat</div>
+            </div>
+            <div class="social-icons">
+                <a href="https://facebook.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+            </div>
         </div>
-
         <div class="right-section auth-section">
             <div class="auth-container">
-
-                <form class="signup-form">
+                <form class="signup-form" action="A02_login_student.html" method="get">
                     <h1 class="auth-title">Sign Up</h1>
-                    <p class="auth-subtitle">Create a new account</p>
 
                     <div class="form-group">
                         <label for="fullname">Full Name</label>
@@ -49,11 +56,9 @@
                         Create Account <i class="fas fa-check ml-2"></i>
                     </button>
                 </form>
-
                 <hr class="divider">
-
                 <div class="login-option">
-                    <p>Already have an account? <a href="login_page.html" class="login-btn transition-all duration-300 hover:text-blue-600">Login</a>
+                    <p>Already have an account? <a href="A01_signin_credentials.html" class="login-btn">Login</a>
                 </div>
             </div>
         </div>
