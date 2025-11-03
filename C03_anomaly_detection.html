@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anomaly Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+    <!-- 导航元素 -->
+    <div class="back-button">
+        <button class="back-btn" onclick="window.location.href='admin_home.html'">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </button>
+    </div>
+    <div class="user-icon">
+        <a href="A05_profile.html" class="profile-page">
+            <i class="fas fa-user-tie"></i>
+        </a>
+    </div>
+
+    <div class="app-container">
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Anomaly Detection</h2>
+                <p>Identify and handle unusual reservation activities</p>
+            </div>
+
+            <!-- 异常统计概览 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon anomaly-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Anomalies</h3>
+                        <p class="stat-value">12</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Pending Review</h3>
+                        <p class="stat-value">5</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon resolved-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Resolved</h3>
+                        <p class="stat-value">7</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 异常类型筛选 -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-type="all">All Anomalies</button>
+                <button class="filter-tab" data-type="duplicate">Duplicate Reservations</button>
+                <button class="filter-tab" data-type="overtime">Overtime Occupancy</button>
+                <button class="filter-tab" data-type="suspicious">Suspicious Patterns</button>
+            </div>
+
+            <!-- 异常列表 -->
+            <div class="anomaly-list">
+                <div class="anomaly-item" data-type="duplicate">
+                    <div class="anomaly-header">
+                        <div class="anomaly-type">
+                            <span class="type-badge duplicate">Duplicate Reservation</span>
+                        </div>
+                        <div class="anomaly-status">Pending</div>
+                    </div>
+                    <div class="anomaly-details">
+                        <p><strong>User:</strong> John Doe (ID: S2023001)</p>
+                        <p><strong>Room:</strong> C1-05</p>
+                        <p><strong>Issue:</strong> 3 identical reservations for 2025-11-08 14:00-16:00</p>
+                        <p><strong>Detected:</strong> 2025-11-02 09:30</p>
+                    </div>
+                    <div class="anomaly-actions">
+                        <button class="resolve-btn">Mark as Resolved</button>
+                        <button class="details-btn">View Details</button>
+                    </div>
+                </div>
+
+                <div class="anomaly-item" data-type="overtime">
+                    <div class="anomaly-header">
+                        <div class="anomaly-type">
+                            <span class="type-badge overtime">Overtime Occupancy</span>
+                        </div>
+                        <div class="anomaly-status">Pending</div>
+                    </div>
+                    <div class="anomaly-details">
+                        <p><strong>User:</strong> Jane Smith (ID: S2023045)</p>
+                        <p><strong>Room:</strong> A2-03</p>
+                        <p><strong>Issue:</strong> Stayed 2 hours beyond reserved time (18:00-20:00)</p>
+                        <p><strong>Detected:</strong> 2025-11-01 20:15</p>
+                    </div>
+                    <div class="anomaly-actions">
+                        <button class="resolve-btn">Mark as Resolved</button>
+                        <button class="details-btn">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="Form/anomaly-detection.js"></script>
+</body>
+</html>

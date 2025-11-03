@@ -2,14 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location - James Cook University</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,7 +10,11 @@
 <body>
     <div class="location-container">
         <main class="location-content">
-            <h2 class="location-question">where are you? </h2>
+            <div class="header-alignment">
+                <h2 class="location-question">where are you located? </h2>
+                <button class="back-btn" onclick="window.location.href='A02_login_student.html'">
+                    <i class="fas fa-arrow-left mr-2"></i>Back</button>
+            </div>
 
             <div class="map-outer-container">
                 <div class="map-container">
@@ -38,11 +34,11 @@
             </div>
 
             <div class="location-info">
-                <h3 class="location-name">James Cook University</h3>
+                <h3 class="location-name">James Cook University, Singapore</h3>
             </div>
 
             <div class="location-actions">
-                <button class="primary-btn confirm-btn">confirm</button>
+                <button class="primary-btn confirm-btn" onclick="window.location.href='B06_room_selection.html'">confirm</button>
                 <button class="secondary-btn choose-btn">Choose yourself</button>
             </div>
         </main>

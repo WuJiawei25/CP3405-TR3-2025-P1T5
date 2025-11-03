@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat - Select Avenue</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="back-button">
+        <button class="back-btn" onclick="window.location.href='B02_home.html'">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Home
+        </button>
+    </div>
+
+    <div class="app-container">
+        <main class="main-content">
+            <div class="lecture-info-card">
+                <h2 class="lecture-title">Select Your Location</h2>
+                <div class="lecture-details">
+                    <div class="detail-item">
+                        <i class="fa fa-building"></i>
+                        <span>Academic Building</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fa fa-map"></i>
+                        <span>James Cook University, Singapore</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-section">
+                <div class="controls-bar">
+                    <h3 class="section-title">Select Block (Blk A-E)</h3>
+                </div>
+                
+                <div class="block-selection">
+                    <div class="block-options">
+                        <button class="block-btn" data-block="A">Blk A</button>
+                        <button class="block-btn" data-block="B">Blk B</button>
+                        <button class="block-btn" data-block="C">Blk C</button>
+                        <button class="block-btn" data-block="D">Blk D</button>
+                        <button class="block-btn" data-block="E">Blk E</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-section">
+                <div class="controls-bar">
+                    <h3 class="section-title">Select Floor & Room</h3>
+                    <div class="filter-controls">
+                        <button class="floor-btn active" data-floor="1">Floor 1</button>
+                        <button class="floor-btn" data-floor="2">Floor 2</button>
+                        <button class="floor-btn" data-floor="3">Floor 3</button>
+                        <button class="floor-btn" data-floor="4">Floor 4</button>
+                    </div>
+                </div>
+                
+                <div class="room-grid">
+                    <div class="room-placeholder">Please select a block first</div>
+                </div>
+            </div>
+
+            <div class="selected-location-info">
+                <div class="info-header">
+                    <h3>Selected Location</h3>
+                </div>
+                <div class="info-details">
+                    <div class="info-item">
+                        <span class="info-label">Block:</span>
+                        <span class="info-value" id="selected-block">Not selected</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Floor:</span>
+                        <span class="info-value" id="selected-floor">1</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Room:</span>
+                        <span class="info-value" id="selected-room">Not selected</span>
+                    </div>
+                </div>
+                <button class="confirm-button" id="confirm-location" onclick="window.location.href='B03_seat_selection.html'" disabled>
+                    Confirm Location
+                </button>
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span>SmartSeat</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2025 SmartSeat. Making classroom seating smarter.
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="Form/room-selection.js"></script>
+</body>
+</html>

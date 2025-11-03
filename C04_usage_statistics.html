@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usage Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js"> <!-- 引入图表库 -->
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+    <!-- 导航元素 -->
+    <div class="back-button">
+        <button class="back-btn" onclick="window.location.href='admin_home.html'">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </button>
+    </div>
+    <div class="user-icon">
+        <a href="A05_profile.html" class="profile-page">
+            <i class="fas fa-user-tie"></i>
+        </a>
+    </div>
+
+    <div class="app-container">
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Usage Statistics</h2>
+                <p>Analytics for classroom and seat reservations</p>
+            </div>
+
+            <!-- 时间筛选 -->
+            <div class="time-filter">
+                <button class="time-btn active" data-period="week">This Week</button>
+                <button class="time-btn" data-period="month">This Month</button>
+                <button class="time-btn" data-period="quarter">This Quarter</button>
+                <button class="time-btn" data-period="year">This Year</button>
+            </div>
+
+            <!-- 核心指标卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total-icon">
+                        <i class="fas fa-chair"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Reservations</h3>
+                        <p class="stat-value">1,284</p>
+                        <p class="stat-change up">+12% from last period</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon occupancy-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Avg. Occupancy Rate</h3>
+                        <p class="stat-value">78%</p>
+                        <p class="stat-change up">+5% from last period</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon peak-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Peak Hour</h3>
+                        <p class="stat-value">14:00-16:00</p>
+                        <p class="stat-desc">Most popular time slot</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div class="charts-container">
+                <!-- 每日预约趋势图 -->
+                <div class="chart-card">
+                    <h3>Reservation Trends (Daily)</h3>
+                    <canvas id="trendChart" height="250"></canvas>
+                </div>
+
+                <!-- 教室使用率对比图 -->
+                <div class="chart-card">
+                    <h3>Room Usage Rate</h3>
+                    <canvas id="roomUsageChart" height="250"></canvas>
+                </div>
+
+                <!-- 楼层使用率分布 -->
+                <div class="chart-card">
+                    <h3>Floor Occupancy Distribution</h3>
+                    <canvas id="floorChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- 热门教室列表 -->
+            <div class="top-rooms">
+                <h3>Most Popular Rooms</h3>
+                <div class="room-rank-list">
+                    <div class="rank-item">
+                        <div class="rank-number">1</div>
+                        <div class="rank-info">
+                            <span class="room-name">C1-05</span>
+                            <span class="usage-rate">92% occupancy</span>
+                        </div>
+                    </div>
+                    <div class="rank-item">
+                        <div class="rank-number">2</div>
+                        <div class="rank-info">
+                            <span class="room-name">A2-03</span>
+                            <span class="usage-rate">85% occupancy</span>
+                        </div>
+                    </div>
+                    <div class="rank-item">
+                        <div class="rank-number">3</div>
+                        <div class="rank-info">
+                            <span class="room-name">B3-01</span>
+                            <span class="usage-rate">79% occupancy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="Form/usage-statistics.js"></script>
+</body>
+</html>

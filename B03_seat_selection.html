@@ -6,25 +6,17 @@
     <title>SmartSeat - Seat Selection</title>
     <link rel="stylesheet" href="styles/seat-selection.css">
     <link rel="stylesheet" href="CSS/styles.css">
-    <script src="Form/seat-selection.js"></script> <!-- Link JavaScript to HTML -->
+    <script src="Form/seat-selection.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="header-content">
-                <button class="back-button" onclick="window.location.href='index.html'">
-                    <i class="fa fa-arrow-left"></i>
-                </button>
-                <div class="logo">
-                    <span class="logo-text">SmartSeat</span>
-                </div>
-            </div>
-        </header>
+    <div class="back-button">
+        <button class="back-btn" onclick="window.location.href='B02_home.html'">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Home
+        </button>
+    </div>
 
-        <!-- Main Content -->
+    <div class="app-container">
         <main class="main-content">
-            <!-- Lecture Information -->
             <div class="lecture-info-card">
                 <h2 class="lecture-title">Design Thinking III</h2>
                 <div class="lecture-details">
@@ -47,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Controls and Filters -->
             <div class="controls-bar">
                 <h3 class="section-title">Select Your Seat</h3>
                 <div class="filter-controls">
@@ -58,16 +49,12 @@
                 </div>
             </div>
 
-            <!-- Seat Map Section -->
             <div class="seat-map-section">
-                <!-- Instructor Area -->
                 <div class="instructor-area">
                     <span>Screen</span>
                 </div>
 
-                <!-- Seat Grid -->
                 <div class="seat-grid-container">
-                    <!-- Row Labels -->
                     <div class="row-labels">
                         <div>A</div>
                         <div>B</div>
@@ -77,9 +64,7 @@
                         <div>F</div>
                     </div>
 
-                    <!-- Seats Grid -->
                     <div class="seats-grid">
-                        <!-- Row A -->
                         <div class="seat-row">
                             <div class="seat available" data-type="standard" data-seat="A1"></div>
                             <div class="seat available" data-type="standard" data-seat="A2"></div>
@@ -92,7 +77,6 @@
                             <div class="seat available" data-type="standard" data-seat="A8"></div>
                         </div>
 
-                        <!-- Row B -->
                         <div class="seat-row">
                             <div class="seat booked" data-seat="B1"></div>
                             <div class="seat booked" data-seat="B2"></div>
@@ -105,7 +89,6 @@
                             <div class="seat available" data-type="standard" data-seat="B8"></div>
                         </div>
 
-                        <!-- Row C -->
                         <div class="seat-row">
                             <div class="seat available" data-type="standard" data-seat="C1"></div>
                             <div class="seat available" data-type="standard" data-seat="C2"></div>
@@ -118,7 +101,6 @@
                             <div class="seat booked" data-seat="C8"></div>
                         </div>
 
-                        <!-- Row D -->
                         <div class="seat-row">
                             <div class="seat booked" data-seat="D1"></div>
                             <div class="seat available" data-type="standard" data-seat="D2"></div>
@@ -131,7 +113,6 @@
                             <div class="seat available" data-type="standard" data-seat="D8"></div>
                         </div>
 
-                        <!-- Row E -->
                         <div class="seat-row">
                             <div class="seat available" data-type="accessible" data-seat="E1">
                                 <span class="seat-icon"><i class="fa fa-wheelchair"></i></span>
@@ -156,7 +137,6 @@
                             <div class="seat booked" data-seat="E8"></div>
                         </div>
 
-                        <!-- Row F -->
                         <div class="seat-row">
                             <div class="seat available" data-type="standard" data-seat="F1"></div>
                             <div class="seat available" data-type="standard" data-seat="F2"></div>
@@ -170,7 +150,6 @@
                         </div>
                     </div>
 
-                    <!-- Column Labels -->
                     <div class="column-labels">
                         <div>1</div>
                         <div>2</div>
@@ -183,12 +162,10 @@
                     </div>
                 </div>
 
-                <!-- Exit Area -->
                 <div class="exit-area">
                     <span>Exit</span>
                 </div>
 
-                <!-- Seat Legend -->
                 <div class="seat-legend">
                     <div class="legend-item">
                         <div class="legend-color available"></div>
@@ -217,7 +194,6 @@
                 </div>
             </div>
 
-            <!-- Selected Seat Info -->
             <div class="selected-seat-info">
                 <div class="info-header">
                     <h3>Selected Seat</h3>
@@ -240,14 +216,13 @@
                         <span class="info-value">Power outlet, good visibility</span>
                     </div>
                 </div>
-                <button class="confirm-button" onclick="window.location.href='success.html'">
+                <button class="confirm-button" onclick="window.location.href='B05_success.html'">
                     Confirm Seat Reservation
                 </button>
         </form>
             </div>
         </main>
 
-        <!-- Footer -->
         <footer class="main-footer">
             <div class="footer-content">
                 <div class="footer-logo">
@@ -265,7 +240,6 @@
             </div>
         </footer>
     </div>
-
     <script src="scripts/seat-selection.js"></script>
 </body>
 </html>

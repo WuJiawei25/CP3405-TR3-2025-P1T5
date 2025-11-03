@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check My Reservations</title>
+    <link rel="stylesheet" href="check-reservations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/styles.css">
+    <script src="check-reservations.js"></script>
+</head>
+<body>
+    <div class="back-button">
+        <button class="back-btn" onclick="window.location.href='B02_home.html'">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Home
+        </button>
+    </div>
+
+    <div class="page-title">
+        <h1>My Reservations</h1>
+    </div>
+
+    <div class="check-container">
+        <div class="reservation-info">
+            <div class="info-header">
+                <h2>Current Reservation</h2>
+                <span class="date-indicator">October 31, 2025</span>
+            </div>
+            
+            <div class="reservation-details">
+                <div class="detail-item">
+                    <span class="detail-label">Seat No.:</span>
+                    <span class="detail-value">Area A-12</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Time:</span>
+                    <span class="detail-value">14:00 - 16:00</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value active">Confirmed</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Notes:</span>
+                    <span class="detail-value">Please arrive 10 minutes early</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="modify-btn">Modify Reservation</button>
+                <button class="cancel-btn">Cancel Reservation</button>
+            </div>
+        </div>
+
+        <div class="date-selector">
+            <h2>Select Date</h2>
+            
+            <div class="calendar">
+                <div class="calendar-header">
+                    <button class="nav-btn prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <span class="current-month">October 2025</span>
+                    <button class="nav-btn next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="weekdays">
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                    <span>Sun</span>
+                </div>
+                
+                <div class="calendar-days" id="calendarDays">
+                </div>
+            </div>
+            
+            <button class="check-btn">Check Reservations</button>
+        </div>
+    </div>
+</body>
+</html>

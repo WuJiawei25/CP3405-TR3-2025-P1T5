@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve & Unlock Interface</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+    <div class="back-arrow">
+        <a href="A01_signin_credentials.html">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>log out</span>
+        </a>
+    </div>
+
+    <div class="user-icon">
+        <a href="A05_profile.html" class="profile-page">
+            <i class="fas fa-user"></i>
+        </a>
+    </div>
+
+    <div class="home_container">
+        <div class="home_left-buttons">
+            <a href="B01_location.html">
+                <button class="reserve-btn">Reserve A Seat</button>
+            </a>
+            <a href="B04_check_reservations.html">
+                <button class="reserve-btn">Check My Appointment</button>
+            </a>
+        </div>
+
+        <div class="home_right-section">
+            <div class="qr-container">
+                <p class="qr-title">Scan your QR Code</p>
+                <div class="qr-code">
+                    <img src="Images/qrcode.png" alt="QR Code">
+                </div>
+            </div>
+
+            <button class="unlock-btn">
+                <i class="fas fa-lock-open lock-icon"></i>
+                UNLOCK
+            </button>
+        </div>
+    </div>
+
+    <script src="Form/homepage-interactions.js"></script>
+</body>
+</html>
