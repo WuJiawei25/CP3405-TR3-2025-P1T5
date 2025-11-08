@@ -12,13 +12,24 @@
         <main class="location-content">
             <div class="header-alignment">
                 <h2 class="location-question">where are you located? </h2>
-                <button class="back-btn" onclick="window.location.href='A02_login_student.html'">
-                    <i class="fas fa-arrow-left mr-2"></i>Back</button>
+                <button class="back-btn" onclick="window.location.href='B02_home.html'">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
+            </div>
+
+            <div class="campus-selection">
+                <div class="campus-options">
+                    <button class="campus-btn active" data-campus="singapore">Singapore</button>
+                    <button class="campus-btn" data-campus="townsville">Townsville</button>
+                    <button class="campus-btn" data-campus="cairns">Cairns</button>
+                </div>
             </div>
 
             <div class="map-outer-container">
                 <div class="map-container">
-                    <img src="Images/location.png" alt="Map showing location of James Cook University" class="map-image">
+                    <img src="Images/location_singapore.png" alt="Map showing location of James Cook University Singapore" class="map-image active" data-campus="singapore">
+                    <img src="Images/location_townsville.png" alt="Map showing location of James Cook University Townsville" class="map-image" data-campus="townsville" style="display: none;">
+                    <img src="Images/location_cairns.png" alt="Map showing location of James Cook University Cairns" class="map-image" data-campus="cairns" style="display: none;">
 
                     <div class="map-controls">
                         <button class="map-control-btn zoom-in">
@@ -28,23 +39,171 @@
                             <i class="fas fa-minus"></i>
                         </button>
                     </div>
-
-                    <a href="#" class="view-larger-map">View larger map</a>
                 </div>
             </div>
 
             <div class="location-info">
-                <h3 class="location-name">James Cook University, Singapore</h3>
+                <h3 class="location-name" data-campus="singapore">James Cook University, Singapore</h3>
+                <h3 class="location-name" data-campus="townsville" style="display: none;">James Cook University, Townsville</h3>
+                <h3 class="location-name" data-campus="cairns" style="display: none;">James Cook University, Cairns</h3>
+                
+                <p class="location-address" data-campus="singapore">149 Sims Drive, Singapore 387380</p>
+                <p class="location-address" data-campus="townsville" style="display: none;">1 James Cook Drive, Douglas, QLD 4814, Australia</p>
+                <p class="location-address" data-campus="cairns" style="display: none;">1 Trinity Beach Road, Trinity Park, QLD 4879, Australia</p>
             </div>
 
             <div class="location-actions">
                 <button class="primary-btn confirm-btn" onclick="window.location.href='B06_room_selection.html'">confirm</button>
-                <button class="secondary-btn choose-btn">Choose yourself</button>
             </div>
         </main>
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span>SmartSeat</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
+                </div>
+            </div>
+        </footer>
     </div>
+    
+    <script>
+        const campusBtns = document.querySelectorAll('.campus-btn');
+        const mapImages = document.querySelectorAll('.map-image');
+        const locationNames = document.querySelectorAll('.location-name');
+        const locationAddresses = document.querySelectorAll('.location-address');
+        const largerMapLinks = document.querySelectorAll('.view-larger-map');
+
+        const campusMapLinks = {
+            singapore: "https://maps.google.com/maps?q=James+Cook+University+Singapore",
+            townsville: "https://maps.google.com/maps?q=James+Cook+University+Townsville",
+            cairns: "https://maps.google.com/maps?q=James+Cook+University+Cairns"
+        };
+
+        campusBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const campus = btn.getAttribute('data-campus');
+                
+                campusBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                mapImages.forEach(img => {
+                    img.style.display = img.getAttribute('data-campus') === campus ? 'block' : 'none';
+                });
+                
+                locationNames.forEach(name => {
+                    name.style.display = name.getAttribute('data-campus') === campus ? 'block' : 'none';
+                });
+                
+                locationAddresses.forEach(addr => {
+                    addr.style.display = addr.getAttribute('data-campus') === campus ? 'block' : 'none';
+                });
+                
+                document.querySelector('.view-larger-map').href = campusMapLinks[campus];
+            });
+        });
+
+        const mapContainer = document.querySelector('.map-container');
+        const mapImage = document.querySelector('.map-image.active');
+        const zoomInBtn = document.querySelector('.zoom-in');
+        const zoomOutBtn = document.querySelector('.zoom-out');
+
+        let scale = 1;
+        const scaleStep = 0.2;
+        const maxScale = 2;
+        const minScale = 0.8;
+
+        zoomInBtn.addEventListener('click', () => {
+            if (scale < maxScale) {
+                scale += scaleStep;
+                updateMapScale();
+            }
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+            if (scale > minScale) {
+                scale -= scaleStep;
+                updateMapScale();
+            }
+        });
+
+        function updateMapScale() {
+            const activeMap = document.querySelector('.map-image[style*="display: block"]') || 
+                                document.querySelector('.map-image.active');
+            if (activeMap) {
+                activeMap.style.transform = `scale(${scale})`;
+                activeMap.style.transformOrigin = 'center';
+            }
+        }
+
+        let isDragging = false;
+        let startX, startY;
+        let translateX = 0, translateY = 0;
+        let lastTranslateX = 0, lastTranslateY = 0;
+
+        mapContainer.addEventListener('mousedown', startDrag);
+        mapContainer.addEventListener('touchstart', startDrag, { passive: true });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: true });
+
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            
+            if (e.type === 'mousedown') {
+                startX = e.clientX - lastTranslateX;
+                startY = e.clientY - lastTranslateY;
+            } else {
+                startX = e.touches[0].clientX - lastTranslateX;
+                startY = e.touches[0].clientY - lastTranslateY;
+            }
+            
+            mapContainer.style.cursor = 'grabbing';
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            let clientX, clientY;
+            if (e.type === 'mousemove') {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            
+            translateX = clientX - startX;
+            translateY = clientY - startY;
+            
+            updateMapPosition();
+        }
+
+        function endDrag() {
+            isDragging = false;
+            lastTranslateX = translateX;
+            lastTranslateY = translateY;
+            mapContainer.style.cursor = 'grab';
+        }
+
+        function updateMapPosition() {
+            const activeMap = document.querySelector('.map-image[style*="display: block"]') || 
+                                document.querySelector('.map-image.active');
+            if (activeMap) {
+                activeMap.style.transform = `scale(${scale}) translate(${translateX/scale}px, ${translateY/scale}px)`;
+            }
+        }
+    </script>
 </body>
-</html>
-
-
 </html>

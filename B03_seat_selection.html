@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartSeat - Seat Selection</title>
-    <link rel="stylesheet" href="styles/seat-selection.css">
     <link rel="stylesheet" href="CSS/styles.css">
-    <script src="Form/seat-selection.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="back-button">
@@ -26,7 +25,7 @@
                     </div>
                     <div class="detail-item">
                         <i class="fa fa-map-marker"></i>
-                        <span>C4-13</span>
+                        <span id="room-location">Loading location...</span>
                     </div>
                     <div class="detail-item">
                         <i class="fa fa-calendar"></i>
@@ -50,120 +49,33 @@
             </div>
 
             <div class="seat-map-section">
-                <div class="instructor-area">
-                    <span>Screen</span>
+                <!-- 上方区域：两个Exit和Screen -->
+                <div class="top-area">
+                    <div class="exit-left">Exit</div>
+                    <div class="screen-area">Screen</div>
+                    <div class="exit-right">Exit</div>
                 </div>
 
-                <div class="seat-grid-container">
-                    <div class="row-labels">
-                        <div>A</div>
-                        <div>B</div>
-                        <div>C</div>
-                        <div>D</div>
-                        <div>E</div>
-                        <div>F</div>
+                <!-- 主要座位区域：中间过道，两边各8排6列 -->
+                <div class="main-seating-area">
+                    <div class="left-seat-section">
+                        <div class="section-label">Left Section</div>
+                        <div class="seats-grid" id="left-seats-grid"></div>
                     </div>
-
-                    <div class="seats-grid">
-                        <div class="seat-row">
-                            <div class="seat available" data-type="standard" data-seat="A1"></div>
-                            <div class="seat available" data-type="standard" data-seat="A2"></div>
-                            <div class="seat booked" data-seat="A3"></div>
-                            <div class="seat booked" data-seat="A4"></div>
-                            <div class="aisle"></div>
-                            <div class="seat available" data-type="standard" data-seat="A5"></div>
-                            <div class="seat available" data-type="standard" data-seat="A6"></div>
-                            <div class="seat available" data-type="standard" data-seat="A7"></div>
-                            <div class="seat available" data-type="standard" data-seat="A8"></div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat booked" data-seat="B1"></div>
-                            <div class="seat booked" data-seat="B2"></div>
-                            <div class="seat available" data-type="standard" data-seat="B3"></div>
-                            <div class="seat available" data-type="standard" data-seat="B4"></div>
-                            <div class="aisle"></div>
-                            <div class="seat available" data-type="standard" data-seat="B5"></div>
-                            <div class="seat booked" data-seat="B6"></div>
-                            <div class="seat booked" data-seat="B7"></div>
-                            <div class="seat available" data-type="standard" data-seat="B8"></div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat available" data-type="standard" data-seat="C1"></div>
-                            <div class="seat available" data-type="standard" data-seat="C2"></div>
-                            <div class="seat booked" data-seat="C3"></div>
-                            <div class="seat booked" data-seat="C4"></div>
-                            <div class="aisle"></div>
-                            <div class="seat selected" data-type="standard" data-seat="C5"></div>
-                            <div class="seat available" data-type="standard" data-seat="C6"></div>
-                            <div class="seat available" data-type="standard" data-seat="C7"></div>
-                            <div class="seat booked" data-seat="C8"></div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat booked" data-seat="D1"></div>
-                            <div class="seat available" data-type="standard" data-seat="D2"></div>
-                            <div class="seat available" data-type="standard" data-seat="D3"></div>
-                            <div class="seat available" data-type="standard" data-seat="D4"></div>
-                            <div class="aisle"></div>
-                            <div class="seat booked" data-seat="D5"></div>
-                            <div class="seat booked" data-seat="D6"></div>
-                            <div class="seat available" data-type="standard" data-seat="D7"></div>
-                            <div class="seat available" data-type="standard" data-seat="D8"></div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat available" data-type="accessible" data-seat="E1">
-                                <span class="seat-icon"><i class="fa fa-wheelchair"></i></span>
-                            </div>
-                            <div class="seat available" data-type="accessible" data-seat="E2">
-                                <span class="seat-icon"><i class="fa fa-wheelchair"></i></span>
-                            </div>
-                            <div class="seat available" data-type="quiet" data-seat="E3">
-                                <span class="seat-icon"><i class="fa fa-volume-off"></i></span>
-                            </div>
-                            <div class="seat available" data-type="quiet" data-seat="E4">
-                                <span class="seat-icon"><i class="fa fa-volume-off"></i></span>
-                            </div>
-                            <div class="aisle"></div>
-                            <div class="seat available" data-type="quiet" data-seat="E5">
-                                <span class="seat-icon"><i class="fa fa-volume-off"></i></span>
-                            </div>
-                            <div class="seat available" data-type="quiet" data-seat="E6">
-                                <span class="seat-icon"><i class="fa fa-volume-off"></i></span>
-                            </div>
-                            <div class="seat booked" data-seat="E7"></div>
-                            <div class="seat booked" data-seat="E8"></div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat available" data-type="standard" data-seat="F1"></div>
-                            <div class="seat available" data-type="standard" data-seat="F2"></div>
-                            <div class="seat booked" data-seat="F3"></div>
-                            <div class="seat booked" data-seat="F4"></div>
-                            <div class="aisle"></div>
-                            <div class="seat available" data-type="standard" data-seat="F5"></div>
-                            <div class="seat available" data-type="standard" data-seat="F6"></div>
-                            <div class="seat available" data-type="standard" data-seat="F7"></div>
-                            <div class="seat available" data-type="standard" data-seat="F8"></div>
-                        </div>
-                    </div>
-
-                    <div class="column-labels">
-                        <div>1</div>
-                        <div>2</div>
-                        <div>3</div>
-                        <div>4</div>
-                        <div>5</div>
-                        <div>6</div>
-                        <div>7</div>
-                        <div>8</div>
+                    
+                    <div class="right-seat-section">
+                        <div class="section-label">Right Section</div>
+                        <div class="seats-grid" id="right-seats-grid"></div>
                     </div>
                 </div>
 
-                <div class="exit-area">
-                    <span>Exit</span>
+                <!-- 后方区域：左侧Exit和右侧延伸台 -->
+                <div class="bottom-area">
+                    <div class="exit-back-left">Exit</div>
+                    <div class="extension-platform">
+                        <div class="platform-label">Extension Platform</div>
+                        <div class="seats-grid" id="platform-seats-grid"></div>
+                    </div>
                 </div>
 
                 <div class="seat-legend">
@@ -193,7 +105,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="selected-seat-info">
                 <div class="info-header">
                     <h3>Selected Seat</h3>
@@ -201,25 +113,24 @@
                 <div class="info-details">
                     <div class="info-item">
                         <span class="info-label">Seat:</span>
-                        <span class="info-value" id="selected-seat-number">C5</span>
+                        <span class="info-value" id="selected-seat-number">Not selected</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Type:</span>
-                        <span class="info-value">Standard</span>
+                        <span class="info-value" id="seat-type">Not selected</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Location:</span>
-                        <span class="info-value">Middle section, near aisle</span>
+                        <span class="info-label">Section:</span>
+                        <span class="info-value" id="seat-section">Not selected</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Features:</span>
-                        <span class="info-value">Power outlet, good visibility</span>
+                        <span class="info-value" id="seat-features">Not selected</span>
                     </div>
                 </div>
-                <button class="confirm-button" onclick="window.location.href='B05_success.html'">
+                <button class="confirm-button" id="confirm-seat" disabled>
                     Confirm Seat Reservation
                 </button>
-        </form>
             </div>
         </main>
 
@@ -235,11 +146,193 @@
                     <a href="#">Privacy</a>
                 </div>
                 <div class="footer-copyright">
-                    © 2025 SmartSeat. Making classroom seating smarter.
+                    © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
                 </div>
             </div>
         </footer>
     </div>
-    <script src="scripts/seat-selection.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const leftSeatsGrid = document.getElementById('left-seats-grid');
+        const rightSeatsGrid = document.getElementById('right-seats-grid');
+        const platformSeatsGrid = document.getElementById('platform-seats-grid');
+        const selectedSeatNumber = document.getElementById('selected-seat-number');
+        const seatTypeEl = document.getElementById('seat-type');
+        const seatSectionEl = document.getElementById('seat-section');
+        const seatFeaturesEl = document.getElementById('seat-features');
+        const locationElement = document.getElementById('room-location');
+        const confirmSeatBtn = document.getElementById('confirm-seat');
+        const roomInfo = JSON.parse(localStorage.getItem('selectedRoomInfo')) || {};
+        const { block, floor, room } = roomInfo;
+        
+        let selectedSeatValue = null;
+        let selectedSeat = null;
+
+        if (locationElement && room) {
+            locationElement.textContent = room;
+        } else if (locationElement) {
+            locationElement.textContent = 'Location not selected';
+        }
+
+        if (!block || !floor || !room) {
+            alert('Please select a room first.');
+            window.location.href = 'B06_room_selection.html';
+            return;
+        }
+
+        function generateSeats() {
+            generateSectionSeats(leftSeatsGrid, 'L', 8, 6);   
+            generateSectionSeats(rightSeatsGrid, 'R', 8, 6); 
+            generateSectionSeats(platformSeatsGrid, 'P', 5, 8); 
+        }
+
+        function generateSectionSeats(container, section, rows, cols) {
+            container.innerHTML = '';
+            
+            for (let row = 1; row <= rows; row++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+                
+                for (let col = 1; col <= cols; col++) {
+                    const seatId = `${section}${row}-${col}`;
+                    const seatBtn = document.createElement('button');
+                    seatBtn.className = 'seat available';
+                    seatBtn.dataset.seat = seatId;
+                    seatBtn.dataset.section = section;
+                    
+                    const types = ['standard', 'accessible', 'quiet'];
+                    const randomType = types[Math.floor(Math.random() * types.length)];
+                    const isBooked = Math.random() < 0.3;
+                    
+                    seatBtn.dataset.type = randomType;
+                    
+                    if (isBooked) {
+                        seatBtn.classList.remove('available');
+                        seatBtn.classList.add('booked');
+                        seatBtn.disabled = true;
+                    }
+                    
+                    if (randomType === 'accessible') {
+                        seatBtn.innerHTML = `<span class="seat-icon"><i class="fa fa-wheelchair"></i></span>`;
+                    } else if (randomType === 'quiet') {
+                        seatBtn.innerHTML = `<span class="seat-icon"><i class="fa fa-volume-off"></i></span>`;
+                    } else {
+                        seatBtn.textContent = col;
+                    }
+                    
+                    seatBtn.addEventListener('click', () => {
+                        if (seatBtn.classList.contains('booked')) return;
+                        
+                        document.querySelectorAll('.seat').forEach(btn => {
+                            btn.classList.remove('selected');
+                        });
+                        
+                        seatBtn.classList.add('selected');
+                        selectedSeat = seatBtn;
+                        selectedSeatValue = seatId;
+                        
+                        updateSelectedSeatInfo();
+                        checkSeatConfirmation();
+                    });
+                    
+                    rowDiv.appendChild(seatBtn);
+                }
+                
+                container.appendChild(rowDiv);
+            }
+        }
+
+        function updateSelectedSeatInfo() {
+            if (!selectedSeat) return;
+
+            const seatId = selectedSeat.dataset.seat;
+            const seatType = selectedSeat.dataset.type;
+            const section = selectedSeat.dataset.section;
+            
+            if (selectedSeatNumber) {
+                selectedSeatNumber.textContent = seatId;
+            }
+            
+            let sectionText = '';
+            switch(section) {
+                case 'L': sectionText = 'Left Section'; break;
+                case 'R': sectionText = 'Right Section'; break;
+                case 'P': sectionText = 'Extension Platform'; break;
+                default: sectionText = 'Unknown Section';
+            }
+            if (seatSectionEl) seatSectionEl.textContent = sectionText;
+            
+            let typeText = 'Standard';
+            let featuresText = 'Power outlet, good visibility';
+            if (seatType === 'accessible') {
+                typeText = 'Accessible';
+                featuresText = 'Wheelchair accessible, extra space, power outlet';
+            } else if (seatType === 'quiet') {
+                typeText = 'Quiet Zone';
+                featuresText = 'Reduced noise area, power outlet, good visibility';
+            }
+            
+            if (seatTypeEl) seatTypeEl.textContent = typeText;
+            if (seatFeaturesEl) seatFeaturesEl.textContent = featuresText;
+        }
+
+        function checkSeatConfirmation() {
+            if (confirmSeatBtn) {
+                confirmSeatBtn.disabled = !selectedSeatValue;
+            }
+        }
+
+        if (confirmSeatBtn) {
+            confirmSeatBtn.addEventListener('click', () => {
+                if (!block || !floor || !room || !selectedSeatValue) {
+                    alert('Please complete seat selection first.');
+                    return;
+                }
+                
+                const reservation = {
+                    id: Date.now(),
+                    block,
+                    floor,
+                    room,
+                    seat: selectedSeatValue,
+                    reservationTime: new Date().toLocaleString(),
+                    lecture: 'Design Thinking III',
+                    lecturer: 'Dr. Tan',
+                    time: 'Today, 9:00-10:00'
+                };
+                
+                const existingReservations = JSON.parse(localStorage.getItem('reservations')) || [];
+                existingReservations.push(reservation);
+                localStorage.setItem('reservations', JSON.stringify(existingReservations));
+                
+                window.location.href = 'B05_success.html';
+            });
+        }
+
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+
+                document.querySelectorAll('.seat').forEach(seat => {
+                    if (seat.classList.contains('booked')) {
+                        seat.style.display = 'block';
+                        return;
+                    }
+                    
+                    const seatType = seat.dataset.type;
+                    const shouldShow = filter === 'all' || seatType === filter;
+                    seat.style.display = shouldShow ? 'block' : 'none';
+                });
+            });
+        });
+
+        generateSeats();
+        checkSeatConfirmation();
+    });
+    </script>
 </body>
 </html>

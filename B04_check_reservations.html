@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check My Reservations</title>
-    <link rel="stylesheet" href="check-reservations.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>My Reservations - SmartSeat</title>
     <link rel="stylesheet" href="CSS/styles.css">
-    <script src="check-reservations.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="back-button">
@@ -16,68 +14,383 @@
         </button>
     </div>
 
-    <div class="page-title">
-        <h1>My Reservations</h1>
-    </div>
+    <div class="app-container">
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">My Reservations</h1>
+                <p class="page-subtitle">Manage and view your seat reservations</p>
+            </div>
 
-    <div class="check-container">
-        <div class="reservation-info">
-            <div class="info-header">
-                <h2>Current Reservation</h2>
-                <span class="date-indicator">October 31, 2025</span>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="total-reservations">0</span>
+                        <span class="stat-label">Total Reservations</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="active-reservations">0</span>
+                        <span class="stat-label">Active</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="upcoming-reservations">0</span>
+                        <span class="stat-label">Upcoming</span>
+                    </div>
+                </div>
             </div>
-            
-            <div class="reservation-details">
-                <div class="detail-item">
-                    <span class="detail-label">Seat No.:</span>
-                    <span class="detail-value">Area A-12</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Time:</span>
-                    <span class="detail-value">14:00 - 16:00</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Status:</span>
-                    <span class="detail-value active">Confirmed</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Notes:</span>
-                    <span class="detail-value">Please arrive 10 minutes early</span>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="modify-btn">Modify Reservation</button>
-                <button class="cancel-btn">Cancel Reservation</button>
-            </div>
-        </div>
 
-        <div class="date-selector">
-            <h2>Select Date</h2>
-            
-            <div class="calendar">
-                <div class="calendar-header">
-                    <button class="nav-btn prev-month"><i class="fas fa-chevron-left"></i></button>
-                    <span class="current-month">October 2025</span>
-                    <button class="nav-btn next-month"><i class="fas fa-chevron-right"></i></button>
+            <div class="filter-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search reservations...">
                 </div>
-                
-                <div class="weekdays">
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                    <span>Sun</span>
-                </div>
-                
-                <div class="calendar-days" id="calendarDays">
+                <div class="filter-options">
+                    <select id="status-filter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <select id="date-filter" class="filter-select">
+                        <option value="all">All Dates</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
                 </div>
             </div>
-            
-            <button class="check-btn">Check Reservations</button>
-        </div>
+
+            <div class="reservations-container">
+                <div class="reservations-header">
+                    <h2>Reservation History</h2>
+                    <button class="new-reservation-btn" onclick="window.location.href='B06_room_selection.html'">
+                        <i class="fas fa-plus"></i>
+                        New Reservation
+                    </button>
+                </div>
+
+                <div class="reservations-list" id="reservations-list">
+                </div>
+
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <h3>No Reservations Found</h3>
+                    <p>You haven't made any reservations yet.</p>
+                    <button class="primary-btn" onclick="window.location.href='B06_room_selection.html'">
+                        Make Your First Reservation
+                    </button>
+                </div>
+
+                <div class="loading-state" id="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading reservations...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span>SmartSeat</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
+                </div>
+            </div>
+        </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reservationsList = document.getElementById('reservations-list');
+            const emptyState = document.getElementById('empty-state');
+            const loadingState = document.getElementById('loading-state');
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            const dateFilter = document.getElementById('date-filter');
+            
+            const totalReservationsEl = document.getElementById('total-reservations');
+            const activeReservationsEl = document.getElementById('active-reservations');
+            const upcomingReservationsEl = document.getElementById('upcoming-reservations');
+
+            let allReservations = [];
+            let filteredReservations = [];
+
+            function initPage() {
+                showLoading();
+                setTimeout(() => {
+                    loadReservations();
+                    setupEventListeners();
+                }, 500);
+            }
+
+            function loadReservations() {
+                try {
+                    const storedReservations = localStorage.getItem('reservations');
+                    allReservations = storedReservations ? JSON.parse(storedReservations) : [];
+                    
+                    allReservations.sort((a, b) => new Date(b.reservationTime) - new Date(a.reservationTime));
+                    
+                    updateStatistics();
+                    applyFilters();
+                    
+                } catch (error) {
+                    console.error('Failed to load reservations:', error);
+                    showError('Error loading reservations. Please try again.');
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            function updateStatistics() {
+                const total = allReservations.length;
+                const active = allReservations.filter(res => 
+                    res.status !== 'cancelled' && res.status !== 'completed'
+                ).length;
+                
+                const today = new Date();
+                const upcoming = allReservations.filter(res => {
+                    const resDate = new Date(res.reservationTime);
+                    return resDate >= today && res.status !== 'cancelled';
+                }).length;
+
+                totalReservationsEl.textContent = total;
+                activeReservationsEl.textContent = active;
+                upcomingReservationsEl.textContent = upcoming;
+            }
+
+            function applyFilters() {
+                let filtered = [...allReservations];
+                
+                const statusValue = statusFilter.value;
+                if (statusValue !== 'all') {
+                    filtered = filtered.filter(res => res.status === statusValue);
+                }
+                
+                const dateValue = dateFilter.value;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (dateValue === 'today') {
+                    filtered = filtered.filter(res => {
+                        const resDate = new Date(res.reservationTime);
+                        resDate.setHours(0, 0, 0, 0);
+                        return resDate.getTime() === today.getTime();
+                    });
+                } else if (dateValue === 'week') {
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(today.getDate() - 7);
+                    filtered = filtered.filter(res => {
+                        const resDate = new Date(res.reservationTime);
+                        return resDate >= weekAgo;
+                    });
+                } else if (dateValue === 'month') {
+                    const monthAgo = new Date(today);
+                    monthAgo.setMonth(today.getMonth() - 1);
+                    filtered = filtered.filter(res => {
+                        const resDate = new Date(res.reservationTime);
+                        return resDate >= monthAgo;
+                    });
+                }
+                
+                const searchTerm = searchInput.value.toLowerCase();
+                if (searchTerm) {
+                    filtered = filtered.filter(res => 
+                        res.room?.toLowerCase().includes(searchTerm) ||
+                        res.seat?.toLowerCase().includes(searchTerm) ||
+                        res.block?.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                filteredReservations = filtered;
+                renderReservations();
+            }
+
+            function renderReservations() {
+                if (filteredReservations.length === 0) {
+                    showEmptyState();
+                    return;
+                }
+                
+                hideEmptyState();
+                
+                reservationsList.innerHTML = filteredReservations.map(reservation => `
+                    <div class="reservation-card ${reservation.status || 'active'}">
+                        <div class="reservation-header">
+                            <div class="reservation-title">
+                                <h3>${reservation.lecture || 'Design Thinking III'}</h3>
+                                <span class="reservation-id">#${reservation.id.toString().slice(-6)}</span>
+                            </div>
+                            <div class="reservation-meta">
+                                <span class="reservation-status ${reservation.status || 'active'}">
+                                    <i class="fas fa-circle"></i>
+                                    ${getStatusText(reservation.status)}
+                                </span>
+                                <span class="reservation-date">
+                                    ${formatDate(reservation.reservationTime)}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="reservation-details">
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                                    <span>${reservation.room || 'N/A'} (Block ${reservation.block}, Floor ${reservation.floor})</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label><i class="fas fa-chair"></i> Seat</label>
+                                    <span>${reservation.seat || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label><i class="fas fa-user"></i> Lecturer</label>
+                                    <span>${reservation.lecturer || 'Dr. Tan'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label><i class="fas fa-clock"></i> Time</label>
+                                    <span>${reservation.time || 'Today, 9:00-10:00'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="reservation-actions">
+                            ${reservation.status !== 'cancelled' ? `
+                                <button class="action-btn modify-btn" onclick="modifyReservation(${reservation.id})">
+                                    <i class="fas fa-edit"></i> Modify
+                                </button>
+                                <button class="action-btn cancel-btn" onclick="cancelReservation(${reservation.id})">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            ` : `
+                                <button class="action-btn delete-btn" onclick="deleteReservation(${reservation.id})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            function getStatusText(status) {
+                const statusMap = {
+                    'active': 'Active',
+                    'completed': 'Completed',
+                    'cancelled': 'Cancelled'
+                };
+                return statusMap[status] || 'Active';
+            }
+
+            function showLoading() {
+                loadingState.style.display = 'block';
+                reservationsList.style.display = 'none';
+            }
+
+            function hideLoading() {
+                loadingState.style.display = 'none';
+                reservationsList.style.display = 'block';
+            }
+
+            function showEmptyState() {
+                emptyState.style.display = 'block';
+                reservationsList.style.display = 'none';
+            }
+
+            function hideEmptyState() {
+                emptyState.style.display = 'none';
+                reservationsList.style.display = 'block';
+            }
+
+            function cancelReservation(id) {
+                if (confirm('Are you sure you want to cancel this reservation?')) {
+                    const reservation = allReservations.find(res => res.id === id);
+                    if (reservation) {
+                        reservation.status = 'cancelled';
+                        localStorage.setItem('reservations', JSON.stringify(allReservations));
+                        loadReservations();
+                        showNotification('Reservation cancelled successfully.', 'success');
+                    }
+                }
+            }
+
+            function deleteReservation(id) {
+                if (confirm('Are you sure you want to delete this reservation record?')) {
+                    allReservations = allReservations.filter(res => res.id !== id);
+                    localStorage.setItem('reservations', JSON.stringify(allReservations));
+                    loadReservations();
+                    showNotification('Reservation deleted successfully.', 'success');
+                }
+            }
+
+            function modifyReservation(id) {
+                const reservation = allReservations.find(res => res.id === id);
+                if (reservation) {
+                    localStorage.setItem('currentModification', JSON.stringify(reservation));
+                    window.location.href = 'B03_seat_selection.html';
+                }
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 5000);
+            }
+
+            function setupEventListeners() {
+                searchInput.addEventListener('input', applyFilters);
+                statusFilter.addEventListener('change', applyFilters);
+                dateFilter.addEventListener('change', applyFilters);
+            }
+
+            window.cancelReservation = cancelReservation;
+            window.deleteReservation = deleteReservation;
+            window.modifyReservation = modifyReservation;
+            window.loadReservations = loadReservations;
+
+            initPage();
+        });
+    </script>
 </body>
 </html>

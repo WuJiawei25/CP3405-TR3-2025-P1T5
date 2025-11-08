@@ -23,29 +23,111 @@
 
     <div class="home_container">
         <div class="home_left-buttons">
-            <a href="B01_location.html">
-                <button class="reserve-btn">Reserve A Seat</button>
-            </a>
-            <a href="B04_check_reservations.html">
-                <button class="reserve-btn">Check My Appointment</button>
-            </a>
+            <button class="reserve-btn" onclick="window.location.href='B01_location.html'">Reserve a Seat</button>
+            <button class="reserve-btn check-btn" onclick="window.location.href='B04_check_reservations.html'">Check My Appointment</button>
         </div>
 
         <div class="home_right-section">
-            <div class="qr-container">
-                <p class="qr-title">Scan your QR Code</p>
-                <div class="qr-code">
-                    <img src="Images/qrcode.png" alt="QR Code">
+            <div class="guide-container">
+                <h2 class="guide-title">How to Reserve a Seat</h2>
+                
+                <div class="guide-steps">
+                    <div class="guide-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Click "Reserve A Seat"</h3>
+                            <p class="step-description">Start your seat reservation process by clicking the button on the left.</p>
+                            <img src="Images/reserve_button.png" alt="Reserve Button" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Confirm Your Location</h3>
+                            <p class="step-description">Select the general area where you want to find a seat.</p>
+                            <img src="Images/confirm_location.png" alt="Confirm Location" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Select Block, Floor and Room</h3>
+                            <p class="step-description">Narrow down your selection by choosing the specific block, floor, and room.</p>
+                            <img src="Images/select_room.png" alt="Select Room" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Select Your Seat</h3>
+                            <p class="step-description">Choose an available seat from the interactive seat map.</p>
+                            <img src="Images/select_seat.png" alt="Select Seat" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Manage Your Reservations</h3>
+                            <p class="step-description">View, modify, or cancel your appointments in "Check My Appointment".</p>
+                            <img src="Images/manage_reservations.png" alt="Manage Reservations" class="step-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scan-section">
+                    <button class="scan-btn" id="scanBtn">
+                        <i class="fas fa-qrcode"></i>
+                        Scan QR Code
+                    </button>
+                    <p class="scan-description">Scan the QR code at the classroom entrance to reserve a seat instantly</p>
                 </div>
             </div>
-
-            <button class="unlock-btn">
-                <i class="fas fa-lock-open lock-icon"></i>
-                UNLOCK
-            </button>
         </div>
+
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span>SmartSeat</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Help</a>
+                    <a href="#">FAQs</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <script src="Form/homepage-interactions.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const unlockBtn = document.querySelector('.unlock-btn');
+            if (unlockBtn) {
+                unlockBtn.addEventListener('click', handleUnlock);
+            }
+            
+            const reserveBtn = document.querySelector('.reserve-btn');
+            if (reserveBtn) {
+                reserveBtn.addEventListener('click', handleReserve);
+            }
+            
+            const checkReserveBtn = document.querySelector('.check-reserve-btn');
+            if (checkReserveBtn) {
+                checkReserveBtn.addEventListener('click', handleCheckReserve);
+            }
+            
+            const userIcon = document.querySelector('.user-icon');
+            if (userIcon) {
+                userIcon.addEventListener('click', showUserMenu);
+            } 
+        });
+    </script>
 </body>
 </html>
