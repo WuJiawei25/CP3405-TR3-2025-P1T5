@@ -4,8 +4,321 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartSeat - Seat Selection</title>
-    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .seat-map-section {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .top-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .exit-left,
+        .exit-right {
+            width: 15%;
+            height: 3rem;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 2px solid #ffb74d;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ef6c00;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .screen-area {
+            width: 60%;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
+            border: 2px dashed var(--gray-300);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .main-seating-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .left-seat-section,
+        .right-seat-section {
+            flex: 1;
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .section-label {
+            text-align: center;
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .seats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .seat {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            position: relative;
+            min-width: 2.5rem;
+        }
+
+        .seat:hover:not(.booked) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .seat.available {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .seat.booked {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-color: #f44336;
+            color: #c62828;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .seat.selected {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-color: #2196f3;
+            color: #1565c0;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+
+        .seat.accessible {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-color: #9c27b0;
+            color: #7b1fa2;
+        }
+
+        .seat.quiet {
+            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+            border-color: #3f51b5;
+            color: #283593;
+        }
+
+        .seat-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+        }
+
+        .bottom-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+
+        .exit-back-left {
+            width: 15%;
+            height: 3rem;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 2px solid #ffb74d;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ef6c00;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .extension-platform {
+            flex: 1;
+            background: var(--gray-100);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px dashed var(--gray-400);
+        }
+
+        .platform-label {
+            text-align: center;
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 0.25rem;
+            border: 2px solid transparent;
+        }
+
+        .legend-color.available { background-color: #c8e6c9; border-color: #4caf50; }
+        .legend-color.selected { background-color: #bbdefb; border-color: #2196f3; }
+        .legend-color.booked { background-color: #ffcdd2; border-color: #f44336; }
+        .legend-color.accessible, 
+        .legend-color.quiet {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .selected-seat-info {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selected-seat-info::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .info-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .info-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .info-label {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-label::before {
+            content: "•";
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .info-value {
+            color: var(--gray-800);
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+    </style>
 </head>
 <body>
     <div class="back-button">
@@ -33,7 +346,7 @@
                     </div>
                     <div class="detail-item">
                         <i class="fa fa-users"></i>
-                        <span>48 seats available</span>
+                        <span>136 seats available</span>
                     </div>
                 </div>
             </div>
@@ -56,7 +369,6 @@
                     <div class="exit-right">Exit</div>
                 </div>
 
-                <!-- 主要座位区域：中间过道，两边各8排6列 -->
                 <div class="main-seating-area">
                     <div class="left-seat-section">
                         <div class="section-label">Left Section</div>
@@ -69,11 +381,10 @@
                     </div>
                 </div>
 
-                <!-- 后方区域：左侧Exit和右侧延伸台 -->
                 <div class="bottom-area">
                     <div class="exit-back-left">Exit</div>
                     <div class="extension-platform">
-                        <div class="platform-label">Extension Platform</div>
+                        <div class="platform-label">Back Section</div>
                         <div class="seats-grid" id="platform-seats-grid"></div>
                     </div>
                 </div>
@@ -133,24 +444,24 @@
                 </button>
             </div>
         </main>
-
-        <footer class="main-footer">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <span>SmartSeat</span>
-                </div>
-                <div class="footer-links">
-                    <a href="#">Help</a>
-                    <a href="#">FAQs</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Privacy</a>
-                </div>
-                <div class="footer-copyright">
-                    © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
-                </div>
-            </div>
-        </footer>
     </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>SmartSeat</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">Help</a>
+                <a href="#">FAQs</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
+            </div>
+        </div>
+    </footer>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
