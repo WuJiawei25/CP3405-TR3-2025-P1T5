@@ -5,8 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: clamp(1.5rem, 5%, 2.5rem);
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.3s ease;
+        }
 
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic-container {
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #005ea7;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-email {
+            color: #6c757d;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .profile-bio {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .profile-bio h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: #212529;
+        }
+
+        .profile-bio p {
+            color: #495057;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile-btn {
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: #005ea7;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-btn:hover {
+            background-color: #005ea7;
+            transform: translateY(-2px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-weight: 600;
+            color: #212529;
+            font-size: 0.85rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,23 +136,19 @@
                 <div class="profile-card">
                     <div class="profile-header">
                         <div class="profile-pic-container">
-                            <img src="Images/profile-picture.png" alt="Emily Nelson profile picture" class="profile-pic">
+                            <img src="Images/profile-picture.jpg" alt="Junjie Chu profile picture" class="profile-pic">
                         </div>
                         <div class="profile-info">
-                            <h1 class="profile-name">Emily Nelson</h1>
-                            <p class="profile-email">emily.n@hotmail.com</p>
+                            <h1 class="profile-name">Junjie Chu</h1>
+                            <p class="profile-email">Full Name</p>
                             <div class="profile-stats">
                                 <div class="stat-item">
-                                    <span class="stat-number">248</span>
-                                    <span class="stat-label">Posts</span>
+                                    <span class="stat-number">14892298</span>
+                                    <span class="stat-label">Student ID</span>
                                 </div>
                                 <div class="stat-item">
-                                    <span class="stat-number">3.2k</span>
-                                    <span class="stat-label">Followers</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number">542</span>
-                                    <span class="stat-label">Following</span>
+                                    <span class="stat-number">jd161422@mail-ljcu.jcu.edu.au</span>
+                                    <span class="stat-label">Email Address</span>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +156,7 @@
                     
                     <div class="profile-bio">
                         <h3>About Me</h3>
-                        <p>Digital designer with passion for creating meaningful and user-centered experiences. Travel enthusiast and photography lover.</p>
+                        <p>As an IT major student, I am obsessed with the in-depth exploration of programming, data structures and emerging technologies.</p>
                     </div>
                     
                     <div class="profile-actions">
