@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat - Usage Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .usage-chart {
+            height: 300px;
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .trend-down {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .trend-neutral {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .room-usage-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .room-usage-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .usage-progress {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .usage-progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .scrollable-panel {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray-300) var(--gray-100);
+        }
+
+        .scrollable-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-thumb {
+            background-color: var(--gray-300);
+            border-radius: 3px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-thumb:hover {
+            background-color: var(--gray-400);
+        }
+
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            color: var(--primary-color);
+            background-color: rgba(0, 94, 167, 0.05);
+        }
+
+        .sidebar-item.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 94, 167, 0.1);
+            font-weight: 500;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        @media (max-width: 1023px) {
+            .sidebar { 
+                transform: translateX(-100%); 
+                position: fixed; 
+                height: 100%; 
+                z-index: 40;
+            }
+            .sidebar.open { 
+                transform: translateX(0); 
+            }
+        }
+
+        .course-action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .course-action-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .course-action-btn.secondary {
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .course-action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .course-action-btn.primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .course-action-btn.secondary:hover {
+            background-color: var(--gray-200);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <div class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col z-40">
+            <div class="p-5 border-b border-gray-200 flex items-center justify-between">
+                <h1 class="text-xl font-bold text-primary flex items-center gap-2">
+                    <i class="fa fa-graduation-cap"></i>
+                    <span>SmartSeat Lecturer</span>
+                </h1>
+                <button class="lg:hidden text-gray-500" id="closeSidebar">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+                <a href="C01_lecturer_home.html" class="sidebar-item">
+                    <i class="fa fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="C02_anomaly_detection.html" class="sidebar-item">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span>Anomaly Detection</span>
+                </a>
+                <a href="C03_usage_statistics.html" class="sidebar-item active">
+                    <i class="fa fa-chart-bar"></i>
+                    <span>Usage Statistics</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center gap-3">
+                    <a href="A03_login_lecture.html" class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overlay" id="overlay"></div>
+        
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-20">
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden text-gray-600" id="openSidebar">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-lg font-semibold text-gray-800">Usage Statistics</h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gray-500">
+                        <span id="currentTime">Loading time...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Usage Statistics & Analytics</h1>
+                    <p class="text-gray-600">Monitor classroom utilization and seating patterns for CP3405 courses</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">CP3405 Overall Usage</p>
+                                <h3 class="text-2xl font-bold text-gray-800">78%</h3>
+                            </div>
+                            <div class="p-3 bg-blue-100 rounded-full">
+                                <i class="fa fa-chart-pie text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="trend-indicator trend-up">
+                                <i class="fa fa-arrow-up"></i>
+                                8.2% from last week
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Active Reservations</p>
+                                <h3 class="text-2xl font-bold text-gray-800">65</h3>
+                            </div>
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <i class="fa fa-calendar-check text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="trend-indicator trend-up">
+                                <i class="fa fa-arrow-up"></i>
+                                15.3% from last week
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Avg. Attendance</p>
+                                <h3 class="text-2xl font-bold text-gray-800">86%</h3>
+                            </div>
+                            <div class="p-3 bg-purple-100 rounded-full">
+                                <i class="fa fa-users text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="trend-indicator trend-up">
+                                <i class="fa fa-arrow-up"></i>
+                                3.7% from last week
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500">Seat Sensor Health</p>
+                                <h3 class="text-2xl font-bold text-gray-800">94%</h3>
+                            </div>
+                            <div class="p-3 bg-orange-100 rounded-full">
+                                <i class="fa fa-microchip text-orange-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="trend-indicator trend-down">
+                                <i class="fa fa-arrow-down"></i>
+                                2.1% from last week
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                                <h3 class="text-lg font-semibold text-gray-800">CP3405 Weekly Usage Trends</h3>
+                                <div class="flex space-x-2 mt-2 sm:mt-0">
+                                    <button class="text-xs bg-primary text-white px-3 py-1 rounded">Week</button>
+                                    <button class="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded">Month</button>
+                                    <button class="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded">Semester</button>
+                                </div>
+                            </div>
+                            <div class="usage-chart">
+                                <canvas id="usageTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Classroom Utilization - CP3405</h3>
+                            
+                            <div class="space-y-4 scrollable-panel">
+                                <div class="room-usage-card p-4 rounded-lg border border-gray-100">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="font-semibold text-gray-800">C2-04 - Design Lab</h4>
+                                        <span class="text-sm font-medium text-gray-700">84%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-3">CP3405 - LA Lecture | Capacity: 70 seats</p>
+                                    <div class="usage-progress mb-2">
+                                        <div class="usage-progress-bar bg-green-500" style="width: 84%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500">
+                                        <span>LA: 65/70 students</span>
+                                        <span>Peak: Mon 09:00 (92%)</span>
+                                    </div>
+                                </div>
+
+                                <div class="room-usage-card p-4 rounded-lg border border-gray-100">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="font-semibold text-gray-800">C2-04 - Design Lab</h4>
+                                        <span class="text-sm font-medium text-gray-700">91%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-3">CP3405 - PA Practical | Capacity: 35 seats</p>
+                                    <div class="usage-progress mb-2">
+                                        <div class="usage-progress-bar bg-red-500" style="width: 91%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500">
+                                        <span>PA: 32/35 students</span>
+                                        <span>Peak: Tue 11:00 (98%)</span>
+                                    </div>
+                                </div>
+
+                                <div class="room-usage-card p-4 rounded-lg border border-gray-100">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="font-semibold text-gray-800">C2-04 - Design Lab</h4>
+                                        <span class="text-sm font-medium text-gray-700">88%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-3">CP3405 - PB Practical | Capacity: 35 seats</p>
+                                    <div class="usage-progress mb-2">
+                                        <div class="usage-progress-bar bg-blue-500" style="width: 88%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500">
+                                        <span>PB: 31/35 students</span>
+                                        <span>Peak: Wed 14:00 (95%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="xl:col-span-1">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Popular Seat Types - C2-04</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2 bg-blue-100 rounded-lg">
+                                            <i class="fa fa-desktop text-blue-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-700">Front Row Seats</span>
+                                    </div>
+                                    <span class="font-semibold text-gray-800">92%</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2 bg-green-100 rounded-lg">
+                                            <i class="fa fa-users text-green-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-700">Middle Section</span>
+                                    </div>
+                                    <span class="font-semibold text-gray-800">78%</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2 bg-purple-100 rounded-lg">
+                                            <i class="fa fa-user text-purple-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-700">Back Row Seats</span>
+                                    </div>
+                                    <span class="font-semibold text-gray-800">65%</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="p-2 bg-orange-100 rounded-lg">
+                                            <i class="fa fa-wheelchair text-orange-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-700">Accessible Seats</span>
+                                    </div>
+                                    <span class="font-semibold text-gray-800">48%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Usage by Time of Day - C2-04</h3>
+                            <div class="usage-chart">
+                                <canvas id="timeDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('openSidebar').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+        });
+        
+        document.getElementById('closeSidebar').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        });
+        
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        const usageCtx = document.getElementById('usageTrendChart').getContext('2d');
+        new Chart(usageCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                datasets: [
+                    { 
+                        label: 'CP3405 - LA', 
+                        data: [78, 82, 85, 80, 88], 
+                        borderColor: '#005ea7', 
+                        backgroundColor: 'rgba(0, 94, 167, 0.1)', 
+                        tension: 0.4, 
+                        fill: true 
+                    },
+                    { 
+                        label: 'CP3405 - PA', 
+                        data: [72, 75, 80, 78, 85], 
+                        borderColor: '#10b981', 
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)', 
+                        tension: 0.4, 
+                        fill: true 
+                    },
+                    { 
+                        label: 'CP3405 - PB', 
+                        data: [70, 78, 82, 80, 87], 
+                        borderColor: '#f59e0b', 
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)', 
+                        tension: 0.4, 
+                        fill: true 
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        padding: 12,
+                        boxPadding: 6,
+                        usePointStyle: true,
+                        callbacks: {
+                            label: ctx => `${ctx.dataset.label}: ${ctx.raw}% utilization`
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        max: 100,
+                        title: { 
+                            display: true, 
+                            text: 'Utilization (%)' 
+                        }, 
+                        grid: { 
+                            color: 'rgba(0, 0, 0, 0.05)' 
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: { 
+                        grid: { 
+                            display: false 
+                        } 
+                    }
+                },
+                interaction: { 
+                    mode: 'nearest', 
+                    axis: 'x', 
+                    intersect: false 
+                },
+                elements: { 
+                    point: { 
+                        radius: 3, 
+                        hoverRadius: 6 
+                    } 
+                }
+            }
+        });
+
+        const timeCtx = document.getElementById('timeDistributionChart').getContext('2d');
+        new Chart(timeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17'],
+                datasets: [
+                    { 
+                        label: 'Usage Rate', 
+                        data: [45, 85, 92, 88, 65, 70, 95, 75, 50], 
+                        backgroundColor: '#3b82f6', 
+                        borderRadius: 4,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        padding: 12,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return `Time: ${tooltipItems[0].label}:00`;
+                            },
+                            label: function(context) {
+                                return `Usage: ${context.parsed.y}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        max: 100,
+                        title: { 
+                            display: true, 
+                            text: 'Usage (%)' 
+                        }, 
+                        grid: { 
+                            color: 'rgba(0, 0, 0, 0.05)' 
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: { 
+                        title: { 
+                            display: true, 
+                            text: 'Time of Day' 
+                        },
+                        grid: { 
+                            display: false 
+                        } 
+                    }
+                }
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                document.querySelector('.sidebar').classList.remove('open');
+                document.getElementById('overlay').classList.remove('open');
+            }
+        });
+
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.bg-gray-200').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.bg-gray-200').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                document.querySelector('.bg-primary').classList.remove('bg-primary', 'text-white');
+                document.querySelector('.bg-primary').classList.add('bg-gray-200', 'text-gray-700');
+                
+                this.classList.remove('bg-gray-200', 'text-gray-700');
+                this.classList.add('bg-primary', 'text-white');
+            });
+        });
+    </script>
+</body>
+</html>

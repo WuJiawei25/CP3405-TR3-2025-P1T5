@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSeat Teacher Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .course-card {
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            background: white;
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-upcoming {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-ongoing {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .scrollable-panel {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gray-300) var(--gray-100);
+        }
+
+        .scrollable-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-thumb {
+            background-color: var(--gray-300);
+            border-radius: 3px;
+        }
+
+        .scrollable-panel::-webkit-scrollbar-thumb:hover {
+            background-color: var(--gray-400);
+        }
+
+        .course-action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .course-action-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .course-action-btn.secondary {
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .course-action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .course-action-btn.primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .course-action-btn.secondary:hover {
+            background-color: var(--gray-200);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        .heatmap-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+        
+        .heatmap-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .heatmap-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .heatmap-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .seat.heatmap-0 {
+            background-color: #e8f5e9;
+        }
+        
+        .seat.heatmap-1 {
+            background-color: #c8e6c9;
+        }
+        
+        .seat.heatmap-2 {
+            background-color: #a5d6a7;
+        }
+        
+        .seat.heatmap-3 {
+            background-color: #81c784;
+        }
+        
+        .seat.heatmap-4 {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .seat-map-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-area, .bottom-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 0.5rem;
+        }
+
+        .exit-left, .exit-right, .exit-back-left {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .screen-area {
+            background: #1f2937;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .main-seating-area {
+            display: flex;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .left-seat-section, .right-seat-section {
+            flex: 1;
+        }
+
+        .section-label {
+            text-align: center;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .seats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .seat {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: default;
+        }
+
+        .seat.accessible, .seat.quiet {
+            position: relative;
+        }
+
+        .seat-icon {
+            font-size: 0.875rem;
+        }
+
+        .extension-platform {
+            flex: 1;
+            text-align: center;
+        }
+
+        .platform-label {
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .seat-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .courses-slider {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .courses-container {
+            display: flex;
+            transition: transform 0.3s ease;
+            gap: 1rem;
+        }
+
+        .course-slide {
+            min-width: 100%;
+            flex-shrink: 0;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d1d5db;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .slider-dot.active {
+            background: #3b82f6;
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .slider-arrow:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .slider-arrow.prev {
+            left: 10px;
+        }
+
+        .slider-arrow.next {
+            right: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        .toast.warning {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <div class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col z-40">
+            <div class="p-5 border-b border-gray-200 flex items-center justify-between">
+                <h1 class="text-xl font-bold text-primary flex items-center gap-2">
+                    <i class="fa fa-graduation-cap"></i>
+                    <span>SmartSeat Lecturer</span>
+                </h1>
+                <button class="lg:hidden text-gray-500" id="closeSidebar">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+                <a href="C01_lecturer_home.html" class="sidebar-item active">
+                    <i class="fa fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="C02_anomaly_detection.html" class="sidebar-item">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span>Anomaly Detection</span>
+                </a>
+                <a href="C03_usage_statistics.html" class="sidebar-item">
+                    <i class="fa fa-chart-bar"></i>
+                    <span>Usage Statistics</span>
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center gap-3">
+                    <a href="A03_login_lecture.html" class="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="overlay" id="overlay"></div>
+        
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-20">
+                <div class="flex items-center gap-4">
+                    <button class="lg:hidden text-gray-600" id="openSidebar">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-lg font-semibold text-gray-800">Lecturer Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gray-500">
+                        <span id="currentTime">Loading time...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">Welcome back, Dr. Tan!</h1>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2 sm:mb-0">Today's Classes</h3>
+                        </div>
+                        
+                        <div class="courses-slider">
+                            <div class="courses-container">
+                                <div class="course-slide">
+                                    <div class="course-card">
+                                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                                            <div>
+                                                <div class="text-lg font-semibold text-gray-800">CP3405 - LA</div>
+                                                <div class="text-sm text-gray-500 bg-gray-100 inline-block px-2 py-1 rounded mt-1">Lecture</div>
+                                            </div>
+                                            <span class="status-badge status-ongoing mt-2 sm:mt-0">
+                                                <i class="fa fa-clock"></i>
+                                                Ongoing
+                                            </span>
+                                        </div>
+                                        <div class="text-gray-600 mb-3">Design Thinking III</div>
+                                        <div class="space-y-2 mb-4">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-clock w-5"></i>
+                                                <span>09:00 - 10:00 (60 mins)</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-map-marker-alt w-5"></i>
+                                                <span>Blk C, Floor 2, Room C2-04</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-users w-5"></i>
+                                                <span>70 students (65 present)</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <button class="course-action-btn primary take-attendance">
+                                                <i class="fa fa-clipboard-check"></i>
+                                                Take Attendance
+                                            </button>
+                                            <button class="course-action-btn secondary view-heatmap" data-room="C2-04">
+                                                <i class="fa fa-fire"></i>
+                                                View Heatmap
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="course-slide">
+                                    <div class="course-card">
+                                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                                            <div>
+                                                <div class="text-lg font-semibold text-gray-800">CP3405 - PA</div>
+                                                <div class="text-sm text-gray-500 bg-gray-100 inline-block px-2 py-1 rounded mt-1">Practical</div>
+                                            </div>
+                                            <span class="status-badge status-upcoming mt-2 sm:mt-0">
+                                                <i class="fa fa-clock"></i>
+                                                Upcoming
+                                            </span>
+                                        </div>
+                                        <div class="text-gray-600 mb-3">Design Thinking III</div>
+                                        <div class="space-y-2 mb-4">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-clock w-5"></i>
+                                                <span>11:00 - 13:00 (120 mins)</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-map-marker-alt w-5"></i>
+                                                <span>Blk C, Floor 2, Room C2-04</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-users w-5"></i>
+                                                <span>35 students registered</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <button class="course-action-btn primary prepare-attendance">
+                                                <i class="fa fa-clipboard-check"></i>
+                                                Prepare Attendance
+                                            </button>
+                                            <button class="course-action-btn secondary view-heatmap" data-room="C2-04">
+                                                <i class="fa fa-fire"></i>
+                                                View Heatmap
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="course-slide">
+                                    <div class="course-card">
+                                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                                            <div>
+                                                <div class="text-lg font-semibold text-gray-800">CP3405 - PB</div>
+                                                <div class="text-sm text-gray-500 bg-gray-100 inline-block px-2 py-1 rounded mt-1">Practical</div>
+                                            </div>
+                                            <span class="status-badge status-completed mt-2 sm:mt-0">
+                                                <i class="fa fa-check"></i>
+                                                Completed
+                                            </span>
+                                        </div>
+                                        <div class="text-gray-600 mb-3">Design Thinking III</div>
+                                        <div class="space-y-2 mb-4">
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-clock w-5"></i>
+                                                <span>14:00 - 16:00 (120 mins)</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-map-marker-alt w-5"></i>
+                                                <span>Blk C, Floor 2, Room C2-04</span>
+                                            </div>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <i class="fa fa-users w-5"></i>
+                                                <span>32 students attended</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2">
+                                            <button class="course-action-btn primary view-attendance">
+                                                <i class="fa fa-clipboard-list"></i>
+                                                View Attendance
+                                            </button>
+                                            <button class="course-action-btn secondary view-heatmap" data-room="C2-04">
+                                                <i class="fa fa-fire"></i>
+                                                View Heatmap
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="slider-arrow prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="slider-arrow next">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+
+                            <div class="slider-controls">
+                                <div class="slider-dot active" data-slide="0"></div>
+                                <div class="slider-dot" data-slide="1"></div>
+                                <div class="slider-dot" data-slide="2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Pending Tasks</h3>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">2 tasks</span>
+                        </div>
+                        
+                        <div class="space-y-4 scrollable-panel">
+                            <div class="p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all hover:shadow-sm">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <p class="font-medium text-gray-800">Approve booking for C2-04</p>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-1 sm:mt-0">Pending</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-3">Requested by JunjieChu (CP3405 class)</p>
+                                <div class="flex gap-2">
+                                    <button class="text-xs bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors approve-booking">
+                                        Approve
+                                    </button>
+                                    <button class="text-xs bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300 transition-colors reject-booking">
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all hover:shadow-sm">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <p class="font-medium text-gray-800">Review equipment issue in C3-01</p>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded mt-1 sm:mt-0">Urgent</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-3">Reported: Projector not working</p>
+                                <button class="text-xs bg-primary text-white px-3 py-1 rounded hover:bg-secondary transition-colors mark-resolved">
+                                    Mark as Resolved
+                                </button>
+                            </div>
+                            
+                            <div class="text-center pt-2">
+                                <button class="teacher-secondary-btn w-full view-all-tasks">
+                                    <i class="fa fa-plus"></i>
+                                    View All Tasks
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                      <h3 class="text-lg font-semibold text-gray-800 mb-2 sm:mb-0">Attendance Overview</h3>
+                    </div>
+                    
+                    <div class="h-64">
+                      <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="heatmapModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="closeHeatmapModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3 class="text-xl font-bold text-gray-800">Seat Heatmap - Room C2-04</h3>
+            </div>
+            
+            <div class="seat-map-container">
+                <div class="heatmap-controls">
+                    <div class="heatmap-legend">
+                        <div class="heatmap-legend-item">
+                            <div class="heatmap-legend-color" style="background-color: #e8f5e9;"></div>
+                            <span>Low Usage</span>
+                        </div>
+                        <div class="heatmap-legend-item">
+                            <div class="heatmap-legend-color" style="background-color: #a5d6a7;"></div>
+                            <span>Medium Usage</span>
+                        </div>
+                        <div class="heatmap-legend-item">
+                            <div class="heatmap-legend-color" style="background-color: #4caf50;"></div>
+                            <span>High Usage</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="seat-map-section">
+                    <div class="top-area">
+                        <div class="exit-left">Exit</div>
+                        <div class="screen-area">Screen</div>
+                        <div class="exit-right">Exit</div>
+                    </div>
+
+                    <div class="main-seating-area">
+                        <div class="left-seat-section">
+                            <div class="section-label">Left Section</div>
+                            <div class="seats-grid" id="left-seats-grid"></div>
+                        </div>
+                        
+                        <div class="right-seat-section">
+                            <div class="section-label">Right Section</div>
+                            <div class="seats-grid" id="right-seats-grid"></div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-area">
+                        <div class="exit-back-left">Exit</div>
+                        <div class="extension-platform">
+                            <div class="platform-label">Extension Platform</div>
+                            <div class="seats-grid" id="platform-seats-grid"></div>
+                        </div>
+                    </div>
+
+                    <div class="seat-legend">
+                        <div class="legend-item">
+                            <div class="legend-color accessible">
+                                <i class="fa fa-wheelchair"></i>
+                            </div>
+                            <span>Accessible</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color quiet">
+                                <i class="fa fa-volume-off"></i>
+                            </div>
+                            <span>Quiet Zone</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.getElementById('openSidebar').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+        });
+        
+        document.getElementById('closeSidebar').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        });
+        
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+        });
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const coursesContainer = document.querySelector('.courses-container');
+            const slides = document.querySelectorAll('.course-slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            const prevBtn = document.querySelector('.slider-arrow.prev');
+            const nextBtn = document.querySelector('.slider-arrow.next');
+            let currentSlide = 0;
+
+            function updateSlider() {
+                coursesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            prevBtn.addEventListener('click', () => {
+                currentSlide = currentSlide > 0 ? currentSlide - 1 : slides.length - 1;
+                updateSlider();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentSlide = currentSlide < slides.length - 1 ? currentSlide + 1 : 0;
+                updateSlider();
+            });
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateSlider();
+                });
+            });
+
+            const leftSeatsGrid = document.getElementById('left-seats-grid');
+            const rightSeatsGrid = document.getElementById('right-seats-grid');
+            const platformSeatsGrid = document.getElementById('platform-seats-grid');
+            const heatmapModal = document.getElementById('heatmapModal');
+            const closeHeatmapModal = document.getElementById('closeHeatmapModal');
+            const viewHeatmapButtons = document.querySelectorAll('.view-heatmap');
+
+            function initializeSeatHeatData() {
+                let seatHeatData = JSON.parse(localStorage.getItem('seatHeatData')) || {};
+                
+                const roomKey = 'C2-04';
+                if (!seatHeatData[roomKey]) {
+                    seatHeatData[roomKey] = {};
+                    generateMockHeatData(seatHeatData[roomKey]);
+                }
+                
+                localStorage.setItem('seatHeatData', JSON.stringify(seatHeatData));
+                return seatHeatData;
+            }
+
+            function generateMockHeatData(roomData) {
+                for (let row = 1; row <= 8; row++) {
+                    for (let col = 1; col <= 6; col++) {
+                        const seatId = `L${row}-${col}`;
+                        let heatValue = 0;
+                        if (row <= 3) {
+                            heatValue = Math.floor(Math.random() * 8) + 3;
+                        } else if (row <= 5) {
+                            heatValue = Math.floor(Math.random() * 5) + 1;
+                        } else {
+                            heatValue = Math.floor(Math.random() * 3);
+                        }
+                        roomData[seatId] = heatValue;
+                    }
+                }
+
+                for (let row = 1; row <= 8; row++) {
+                    for (let col = 1; col <= 6; col++) {
+                        const seatId = `R${row}-${col}`;
+                        let heatValue = 0;
+                        if (row <= 3) {
+                            heatValue = Math.floor(Math.random() * 8) + 3;
+                        } else if (row <= 5) {
+                            heatValue = Math.floor(Math.random() * 5) + 1;
+                        } else {
+                            heatValue = Math.floor(Math.random() * 3);
+                        }
+                        roomData[seatId] = heatValue;
+                    }
+                }
+
+                for (let row = 1; row <= 5; row++) {
+                    for (let col = 1; col <= 8; col++) {
+                        const seatId = `P${row}-${col}`;
+                        let heatValue = 0;
+                        if (row <= 2) {
+                            heatValue = Math.floor(Math.random() * 6) + 2;
+                        } else {
+                            heatValue = Math.floor(Math.random() * 4);
+                        }
+                        roomData[seatId] = heatValue;
+                    }
+                }
+            }
+
+            function getSeatHeatLevel(seatId, roomData) {
+                if (!roomData || !roomData[seatId]) {
+                    return 0;
+                }
+                
+                const heatValue = roomData[seatId];
+                
+                if (heatValue >= 8) return 4;
+                if (heatValue >= 5) return 3;
+                if (heatValue >= 3) return 2;
+                if (heatValue >= 1) return 1;
+                return 0;
+            }
+
+            function generateHeatmapSeats() {
+                const roomKey = 'C2-04';
+                const seatHeatData = JSON.parse(localStorage.getItem('seatHeatData')) || {};
+                const roomData = seatHeatData[roomKey];
+                
+                generateSectionHeatSeats(leftSeatsGrid, 'L', 8, 6, roomData);
+                generateSectionHeatSeats(rightSeatsGrid, 'R', 8, 6, roomData);
+                generateSectionHeatSeats(platformSeatsGrid, 'P', 5, 8, roomData);
+            }
+
+            function generateSectionHeatSeats(container, section, rows, cols, roomData) {
+                container.innerHTML = '';
+                
+                for (let row = 1; row <= rows; row++) {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'seat-row';
+                    
+                    for (let col = 1; col <= cols; col++) {
+                        const seatId = `${section}${row}-${col}`;
+                        const seatDiv = document.createElement('div');
+                        seatDiv.className = 'seat';
+                        seatDiv.dataset.seat = seatId;
+                        
+                        const heatLevel = getSeatHeatLevel(seatId, roomData);
+                        seatDiv.classList.add(`heatmap-${heatLevel}`);
+                        
+                        const types = ['standard', 'accessible', 'quiet'];
+                        const randomType = types[Math.floor(Math.random() * types.length)];
+                        
+                        if (randomType === 'accessible') {
+                            seatDiv.innerHTML = `<span class="seat-icon"><i class="fa fa-wheelchair"></i></span>`;
+                            seatDiv.classList.add('accessible');
+                        } else if (randomType === 'quiet') {
+                            seatDiv.innerHTML = `<span class="seat-icon"><i class="fa fa-volume-off"></i></span>`;
+                            seatDiv.classList.add('quiet');
+                        } else {
+                            seatDiv.textContent = col;
+                        }
+                        
+                        rowDiv.appendChild(seatDiv);
+                    }
+                    
+                    container.appendChild(rowDiv);
+                }
+            }
+
+            function openHeatmapModal(room) {
+                generateHeatmapSeats();
+                heatmapModal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                heatmapModal.classList.add('hidden');
+            }
+
+            viewHeatmapButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const room = this.getAttribute('data-room');
+                    openHeatmapModal(room);
+                });
+            });
+
+            closeHeatmapModal.addEventListener('click', closeModal);
+            
+            heatmapModal.addEventListener('click', function(e) {
+                if (e.target === heatmapModal) {
+                    closeModal();
+                }
+            });
+
+            initializeSeatHeatData();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.take-attendance').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showToast('Attendance system opened successfully', 'success');
+                });
+            });
+
+            document.querySelectorAll('.prepare-attendance').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showToast('Attendance preparation started', 'success');
+                });
+            });
+
+            document.querySelectorAll('.view-attendance').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showToast('Opening attendance records...', 'success');
+                });
+            });
+
+            document.querySelector('.approve-booking').addEventListener('click', function() {
+                showToast('Booking request approved', 'success');
+                this.closest('.p-3').remove();
+                updateTaskCount();
+            });
+
+            document.querySelector('.reject-booking').addEventListener('click', function() {
+                showToast('Booking request rejected', 'warning');
+                this.closest('.p-3').remove();
+                updateTaskCount();
+            });
+
+            document.querySelector('.mark-resolved').addEventListener('click', function() {
+                showToast('Issue marked as resolved', 'success');
+                this.closest('.p-3').remove();
+                updateTaskCount();
+            });
+
+            document.querySelector('.view-all-tasks').addEventListener('click', function() {
+                showToast('Opening all tasks view...', 'success');
+
+            });
+
+            function updateTaskCount() {
+                const taskCount = document.querySelectorAll('.p-3').length;
+                document.querySelector('.text-xs.text-gray-500').textContent = `${taskCount} tasks`;
+            }
+        });
+
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(attendanceCtx, {
+            type: 'line',
+            data: {
+              labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+              datasets: [
+                {
+                  label: 'CP3405 - LA',
+                  data: [85, 82, 90, 78, 88],
+                  borderColor: '#005ea7',
+                  backgroundColor: 'rgba(0, 94, 167, 0.1)',
+                  tension: 0.3,
+                  fill: false
+                },
+                {
+                  label: 'CP3405 - PA',
+                  data: [78, 80, 85, 82, 87],
+                  borderColor: '#10b981',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  tension: 0.3,
+                  fill: false
+                },
+                {
+                  label: 'CP3405 - PB',
+                  data: [82, 85, 88, 80, 90],
+                  borderColor: '#f59e0b',
+                  backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                  tension: 0.3,
+                  fill: false
+                }
+              ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
