@@ -2,11 +2,14 @@ import os
 import json
 import argparse
 import warnings
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple
 
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.statespace.sarimax import SARIMAX, SARIMAXResults
+
+
+# Utilities
 
 def _safe_base_dir() -> str:
     """Return a base directory robust to Jupyter/REPL where __file__ may be missing."""
@@ -14,7 +17,7 @@ def _safe_base_dir() -> str:
 
 
 def _ensure_dir(path: str) -> None:
-    """Ensure the directory for a file path exists."""
+    """Ensure the parent directory for a file path exists."""
     out_dir = os.path.dirname(path)
     if out_dir and not os.path.exists(out_dir):
         os.makedirs(out_dir, exist_ok=True)
@@ -42,30 +45,29 @@ def _infer_datetime_col(df: pd.DataFrame, override: Optional[str]) -> str:
 
 
 def _read_exog_csv(path: str, freq: str, idx_like: pd.DatetimeIndex, date_col: Optional[str] = None) -> pd.DataFrame:
+    """
+    Read exogenous regressors from CSV and align to idx_like.
+    - Detect/parse date column
+    - Set as DatetimeIndex
+    - Resample to requested freq if necessary
+    - Strictly align rows to training index
+    """
     df = pd.read_csv(path)
     dcol = _infer_datetime_col(df, date_col)
     df[dcol] = pd.to_datetime(df[dcol])
     df = df.set_index(dcol).sort_index()
 
-    # If index freq is missing, try to conform to requested freq
-    # We require that final exog has rows exactly at idx_like
     if df.index.tz is not None:
         df.index = df.index.tz_convert(None)
 
-    # If the CSV has higher frequency than target, try to aggregate by period-end/start.
-    # Here we choose 'last' to keep it simple; adjust if needed.
     if freq in ("M", "MS"):
         rule = "M" if freq == "M" else "MS"
-        # If the existing index is not already on requested freq anchors, resample:
         if pd.infer_freq(df.index) != rule:
+            # choose 'last' as a simple policy; adjust per your domain needs
             df = df.resample(rule).last()
 
-    # Align strictly to training index
-    try:
-        exog = df.loc[idx_like]
-    except KeyError:
-        # Try to intersect if exact alignment fails
-        exog = df.reindex(idx_like)
+    # align to training index
+    exog = df.reindex(idx_like)
 
     if exog.isnull().any().any():
         missing = int(exog.isnull().any(axis=1).sum())
@@ -75,8 +77,8 @@ def _read_exog_csv(path: str, freq: str, idx_like: pd.DatetimeIndex, date_col: O
         )
     return exog
 
-# Portable save / load
 
+# Portable save / load
 def portable_save(series: pd.Series, results: SARIMAXResults, portable_json_path: str) -> None:
     """
     Save a portable bundle (JSON + NPZ) that allows reconstructing a SARIMAXResults
@@ -135,6 +137,7 @@ def portable_load(portable_json_path: str) -> SARIMAXResults:
     res = model.filter(np.asarray(meta["params"]))
     return res
 
+
 # Core training
 
 def train_and_save(
@@ -150,35 +153,37 @@ def train_and_save(
     n: int = 120,
     forecast_steps: int = 0,
 ) -> str:
-
+    """
+    Train a small SARIMAX on synthetic seasonal-trend data and save both:
+      1) Pickled SARIMAXResults (.pkl)
+      2) A portable bundle (.json + .npz) for cross-version reconstruction
+    """
     # Resolve output path robustly to Jupyter/REPL
     if model_path is None:
         base_dir = _safe_base_dir()
         model_path = os.path.join(base_dir, "sarimax_model.pkl")
 
-    # Simulate seasonal + trend series
+    # simulate seasonal + trend series
     np.random.seed(random_seed)
     t = np.arange(n)
-    m = seasonal_order[3]  # seasonal period m from seasonal_order
+    m = seasonal_order[3]  # seasonal period
     seasonal = 2.0 * np.sin(2 * np.pi * t / m)
     trend = 0.05 * t
     y = 10 + trend + seasonal + 0.5 * np.random.randn(n)
 
-    # Monthly index: month-end 'M' or month-start 'MS'
-    idx = pd.date_range(start="2025-01-01", periods=n, freq=freq)
+    idx = pd.date_range(start="2000-01-01", periods=n, freq=freq)
     series = pd.Series(y, index=idx)
 
-    # Optional exogenous regressors
+    # optional exogenous regressors
     exog = None
     if exog_csv:
         exog = _read_exog_csv(exog_csv, freq=freq, idx_like=series.index, date_col=exog_date_col)
         if len(exog) != len(series):
             raise ValueError(f"exog length {len(exog)} != series length {len(series)} after alignment")
 
-    # Fit SARIMAX
+    #  fit SARIMAX
     with warnings.catch_warnings():
-        # show warnings by default (so you can see convergence issues)
-        warnings.simplefilter('default' if show_warnings else 'ignore')
+        warnings.simplefilter('default' if show_warnings else 'ignore')  # show warnings by default
         model = SARIMAX(
             series,
             exog=exog,
@@ -189,11 +194,10 @@ def train_and_save(
         )
         results = model.fit(disp=False)
 
-    # Save results (pickle + portable)
+    # save (pickle + portable)
     _ensure_dir(model_path)
     results.save(model_path)
 
-    # portable bundle lives alongside .pkl, e.g. sarimax_model.portable.json + .npz
     base, _ = os.path.splitext(model_path)
     portable_json_path = base + ".portable.json"
     portable_save(series, results, portable_json_path)
@@ -201,7 +205,7 @@ def train_and_save(
     print(f"[OK] Pickle saved to: {model_path}")
     print(f"[OK] Portable bundle saved to: {portable_json_path} (+ .npz)")
 
-    # Optional forecast demo
+    # optional forecast demo
     if forecast_steps and forecast_steps > 0:
         pred = results.get_forecast(steps=forecast_steps)
         mean = pred.predicted_mean
@@ -213,6 +217,8 @@ def train_and_save(
 
     return model_path
 
+
+# CLI
 
 def main():
     parser = argparse.ArgumentParser(
