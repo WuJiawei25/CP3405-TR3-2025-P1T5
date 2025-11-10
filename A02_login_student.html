@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Seat Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="CSS/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="container no-scroll-container">
+  <div class="container">
     <img src="Images/jcu-logo.png" alt="JCU Logo" class="jcu-logo">
     <div class="left-section">
       <div class="menu-btn">
@@ -21,11 +21,6 @@
       <div class="center-content">
         <i class="fas fa-fingerprint fingerprint-icon"></i>
         <div class="take-seat">SmartSeat</div>
-      </div>
-      <div class="social-icons">
-        <a href="https://facebook.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://instagram.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-        <a href="https://twitter.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
       </div>
     </div>
 
@@ -38,14 +33,13 @@
         <div class="account-greeting">Welcome back, Hamid</div>
       </div>
 
-      
       <div class="other-account">
         <span class="other-account-text">Login to a different account</span>
         <button class="login-btn" onclick="window.location.href='B02_home.html'">Login -></button>
       </div>
-      <a href="A01_signin_credentials.html" class="get">
-        <button class="remove-btn">Remove</button>
-      </a>
+      <form action="A01_signin_credentials.html" method="post" style="display: inline;">
+        <button type="submit" class="remove-btn">Remove</button>
+      </form>
     </div>
   </div>
 </body>

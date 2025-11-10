@@ -5,7 +5,248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserve & Unlock Interface</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .user-icon {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .user-icon a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+        }
+
+        .user-icon a:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .user-icon i {
+            font-size: 1.25rem;
+            color: var(--gray-700);
+        }
+
+        .user-icon a:hover i {
+            color: white;
+        }
+
+        .home_container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            align-items: start;
+            padding: 0 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+
+        .home_left-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            position: sticky;
+            top: 120px;
+        }
+
+        .home_left-buttons .nav-btn {
+            text-decoration: none;
+            display: block;
+        }
+
+        .home_left-buttons .reserve-btn {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--accent-blue), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .home_left-buttons .reserve-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-blue));
+        }
+
+        .home_left-buttons .reserve-btn.active {
+            background: linear-gradient(135deg, var(--gray-700), var(--gray-800));
+        }
+
+        .home_left-buttons .reserve-btn i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .home_right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .guide-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .guide-title {
+            color: #333;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 25px;
+            margin-bottom: 30px;
+        }
+
+        .guide-step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #005ea7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .step-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .scan-section {
+            margin-top: 10px;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border-radius: 10px;
+        }
+
+        .scan-btn {
+            background-color: #005ea7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 auto;
+        }
+
+        .scan-btn:hover {
+            background-color: #004a8a;
+            transform: translateY(-2px);
+        }
+
+        .scan-description {
+            color: #666;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .back-arrow {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+        }
+
+        .back-arrow a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: white;
+            color: var(--gray-700);
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+        }
+
+        .back-arrow a:hover {
+            background: var(--accent-red);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .back-arrow i {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="back-arrow">
@@ -23,29 +264,111 @@
 
     <div class="home_container">
         <div class="home_left-buttons">
-            <a href="B01_location.html">
-                <button class="reserve-btn">Reserve A Seat</button>
-            </a>
-            <a href="B04_check_reservations.html">
-                <button class="reserve-btn">Check My Appointment</button>
-            </a>
+            <button class="reserve-btn" onclick="window.location.href='B01_location.html'">Reserve a Seat</button>
+            <button class="reserve-btn check-btn" onclick="window.location.href='B04_check_reservations.html'">Check My Appointment</button>
         </div>
 
         <div class="home_right-section">
-            <div class="qr-container">
-                <p class="qr-title">Scan your QR Code</p>
-                <div class="qr-code">
-                    <img src="Images/qrcode.png" alt="QR Code">
+            <div class="guide-container">
+                <h2 class="guide-title">How to Reserve a Seat</h2>
+                
+                <div class="guide-steps">
+                    <div class="guide-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Click "Reserve A Seat"</h3>
+                            <p class="step-description">Start your seat reservation process by clicking the button on the left.</p>
+                            <img src="Images/reserve_button.png" alt="Reserve Button" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Confirm Your Location</h3>
+                            <p class="step-description">Select the general area where you want to find a seat.</p>
+                            <img src="Images/confirm_location.png" alt="Confirm Location" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Select Block, Floor and Room</h3>
+                            <p class="step-description">Narrow down your selection by choosing the specific block, floor, and room.</p>
+                            <img src="Images/select_room.png" alt="Select Room" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Select Your Seat</h3>
+                            <p class="step-description">Choose an available seat from the interactive seat map.</p>
+                            <img src="Images/select_seat.png" alt="Select Seat" class="step-image">
+                        </div>
+                    </div>
+                    
+                    <div class="guide-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Manage Your Reservations</h3>
+                            <p class="step-description">View, modify, or cancel your appointments in "Check My Appointment".</p>
+                            <img src="Images/manage_reservations.png" alt="Manage Reservations" class="step-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scan-section">
+                    <button class="scan-btn" id="scanBtn">
+                        <i class="fas fa-qrcode"></i>
+                        Scan QR Code
+                    </button>
+                    <p class="scan-description">Scan the QR code at the classroom entrance to reserve a seat instantly</p>
                 </div>
             </div>
-
-            <button class="unlock-btn">
-                <i class="fas fa-lock-open lock-icon"></i>
-                UNLOCK
-            </button>
         </div>
     </div>
 
-    <script src="Form/homepage-interactions.js"></script>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>SmartSeat</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">Help</a>
+                <a href="#">FAQs</a>
+                <a href="#">Contact</a>
+                <a href="#">Privacy</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 SmartSeat. MJGA TEAM making classroom seating smarter.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const unlockBtn = document.querySelector('.unlock-btn');
+            if (unlockBtn) {
+                unlockBtn.addEventListener('click', handleUnlock);
+            }
+            
+            const reserveBtn = document.querySelector('.reserve-btn');
+            if (reserveBtn) {
+                reserveBtn.addEventListener('click', handleReserve);
+            }
+            
+            const checkReserveBtn = document.querySelector('.check-reserve-btn');
+            if (checkReserveBtn) {
+                checkReserveBtn.addEventListener('click', handleCheckReserve);
+            }
+            
+            const userIcon = document.querySelector('.user-icon');
+            if (userIcon) {
+                userIcon.addEventListener('click', showUserMenu);
+            } 
+        });
+    </script>
 </body>
 </html>

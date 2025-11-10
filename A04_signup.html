@@ -5,11 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="CSS/styles.css">
-    <script src="Form/signup-validation.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .signup-form {
+            width: 100%;
+            margin-bottom: 2rem;
+            margin-top: -2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+            transition: color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #005ea7;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+        }
+
+        .form-group input:focus::placeholder {
+            color: #ccc;
+        }
+
+        .login-option {
+            text-align: center;
+        }
+
+        .login-link {
+            color: #005ea7;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .login-link:hover {
+            color: #005ea7;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="container no-scroll-container">
+    <div class="container">
         <img src="Images/jcu-logo.png" alt="JCU Logo" class="jcu-logo">
         <div class="left-section">
             <div class="menu-btn">
@@ -20,11 +78,6 @@
             <div class="center-content">
                 <i class="fas fa-fingerprint fingerprint-icon"></i>
                 <div class="take-seat">SmartSeat</div>
-            </div>
-            <div class="social-icons">
-                <a href="https://facebook.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://instagram.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                <a href="https://twitter.com/your-account" class="social-icon" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
         <div class="right-section auth-section">
@@ -63,5 +116,16 @@
             </div>
         </div>
     </div>
+    <script>
+        document.querySelector('.signup-form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+            }
+        });
+    </script>
 </body>
 </html>
