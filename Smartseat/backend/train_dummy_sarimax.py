@@ -165,7 +165,7 @@ def train_and_save(
     y = 10 + trend + seasonal + 0.5 * np.random.randn(n)
 
     # Monthly index: month-end 'M' or month-start 'MS'
-    idx = pd.date_range(start="2000-01-01", periods=n, freq=freq)
+    idx = pd.date_range(start="2025-01-01", periods=n, freq=freq)
     series = pd.Series(y, index=idx)
 
     # Optional exogenous regressors
