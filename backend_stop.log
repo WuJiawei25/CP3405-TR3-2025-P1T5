@@ -1,0 +1,17 @@
+========================================
+[STOP ] 2025-11-15 21:45:57
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[STEP] 停止后端服务 (stop)
+停止进程 pid=5687
+已停止
+[STEP] 查询服务状态 (status)
+./run_server.sh: line 138: PIDFILE�: unbound variable
+----------------------------------------
+后端已尝试停止。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 再次启动：  ./start_backend.command 或 bash Smartseat/run_server.sh start
+本次停止输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_stop.log
+----------------------------------------
+按回车关闭此窗口...

@@ -1,0 +1,65 @@
+========================================
+[START] 2025-11-15 21:44:56
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=5687
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=5687
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+Internal Server Error
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-15 21:51:17
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=5870
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=5870
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...
