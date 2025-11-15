@@ -4,6 +4,8 @@ from typing import Optional
 from ..database import get_db
 from .. import models, schemas
 from ..utils import hash_password, verify_password, new_token
+from sqlalchemy.exc import IntegrityError
+import logging
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -20,9 +22,18 @@ def signup(payload: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
         db.commit()
         db.refresh(user)
+    except IntegrityError as ie:
+        db.rollback()
+        # Handle race condition duplicate (UNIQUE constraint) separately
+        msg = str(ie.orig).lower()
+        if "unique" in msg and "users" in msg and "email" in msg:
+            raise HTTPException(status_code=400, detail="Email already registered (race condition)")
+        logging.exception("IntegrityError during signup for %s", email)
+        raise HTTPException(status_code=500, detail="Database integrity error during signup")
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail="Failed to create user")
+        logging.exception("Unexpected DB error during signup for %s", email)
+        raise HTTPException(status_code=500, detail="Failed to create user: internal error")
     return user
 
 @router.post("/login", response_model=schemas.TokenResponse)

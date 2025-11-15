@@ -6,6 +6,7 @@
     <title>My Reservations - SmartSeat</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="auth.js"></script>
     <style>
         .page-header {
             text-align: center;
@@ -417,10 +418,11 @@
     </style>
 </head>
 <body>
-    <div class="back-button">
+    <div class="back-button" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">
         <button class="back-btn" onclick="window.location.href='B02_home.html'">
             <i class="fas fa-arrow-left mr-2"></i> Back to Home
         </button>
+        <button class="secondary-btn" onclick="Auth.logout()"><i class="fa fa-sign-out"></i> Logout</button>
     </div>
 
     <div class="app-container">
@@ -490,8 +492,7 @@
                     </button>
                 </div>
 
-                <div class="reservations-list" id="reservations-list">
-                </div>
+                <div class="reservations-list" id="reservations-list"></div>
 
                 <div class="empty-state" id="empty-state" style="display: none;">
                     <div class="empty-icon">
@@ -531,6 +532,7 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            try { Auth.requireAuth(); } catch(_) { return; }
             const reservationsList = document.getElementById('reservations-list');
             const emptyState = document.getElementById('empty-state');
             const loadingState = document.getElementById('loading-state');
@@ -547,22 +549,20 @@
 
             function initPage() {
                 showLoading();
-                setTimeout(() => {
-                    loadReservations();
+                loadReservations().then(() => {
                     setupEventListeners();
-                }, 500);
+                });
             }
 
-            function loadReservations() {
+            async function loadReservations() {
                 try {
-                    const storedReservations = localStorage.getItem('reservations');
-                    allReservations = storedReservations ? JSON.parse(storedReservations) : [];
-                    
-                    allReservations.sort((a, b) => new Date(b.reservationTime) - new Date(a.reservationTime));
-                    
+                    const res = await Auth.apiFetch('/api/reservations/mine');
+                    const list = await res.json();
+                    allReservations = Array.isArray(list) ? list : [];
+                    // sort by created_at desc
+                    allReservations.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                     updateStatistics();
                     applyFilters();
-                    
                 } catch (error) {
                     console.error('Failed to load reservations:', error);
                     showError('Error loading reservations. Please try again.');
@@ -573,14 +573,13 @@
 
             function updateStatistics() {
                 const total = allReservations.length;
-                const active = allReservations.filter(res => 
-                    res.status !== 'cancelled' && res.status !== 'completed'
-                ).length;
-                
-                const today = new Date();
+                const active = allReservations.filter(res => res.status === 'active').length;
+                // Upcoming: those with start_time in the future (if provided) or created_at today or later
+                const now = new Date();
                 const upcoming = allReservations.filter(res => {
-                    const resDate = new Date(res.reservationTime);
-                    return resDate >= today && res.status !== 'cancelled';
+                    if(res.start_time){ return new Date(res.start_time) >= now && res.status !== 'cancelled'; }
+                    const created = new Date(res.created_at); created.setHours(0,0,0,0); const today = new Date(); today.setHours(0,0,0,0);
+                    return created.getTime() === today.getTime() && res.status !== 'cancelled';
                 }).length;
 
                 totalReservationsEl.textContent = total;
@@ -602,32 +601,24 @@
                 
                 if (dateValue === 'today') {
                     filtered = filtered.filter(res => {
-                        const resDate = new Date(res.reservationTime);
-                        resDate.setHours(0, 0, 0, 0);
-                        return resDate.getTime() === today.getTime();
+                        const d = new Date(res.created_at);
+                        d.setHours(0, 0, 0, 0);
+                        return d.getTime() === today.getTime();
                     });
                 } else if (dateValue === 'week') {
-                    const weekAgo = new Date(today);
-                    weekAgo.setDate(today.getDate() - 7);
-                    filtered = filtered.filter(res => {
-                        const resDate = new Date(res.reservationTime);
-                        return resDate >= weekAgo;
-                    });
+                    const weekAgo = new Date(today); weekAgo.setDate(today.getDate() - 7);
+                    filtered = filtered.filter(res => new Date(res.created_at) >= weekAgo);
                 } else if (dateValue === 'month') {
-                    const monthAgo = new Date(today);
-                    monthAgo.setMonth(today.getMonth() - 1);
-                    filtered = filtered.filter(res => {
-                        const resDate = new Date(res.reservationTime);
-                        return resDate >= monthAgo;
-                    });
+                    const monthAgo = new Date(today); monthAgo.setMonth(today.getMonth() - 1);
+                    filtered = filtered.filter(res => new Date(res.created_at) >= monthAgo);
                 }
                 
-                const searchTerm = searchInput.value.toLowerCase();
+                const searchTerm = (searchInput.value || '').toLowerCase();
                 if (searchTerm) {
                     filtered = filtered.filter(res => 
-                        res.room?.toLowerCase().includes(searchTerm) ||
-                        res.seat?.toLowerCase().includes(searchTerm) ||
-                        res.block?.toLowerCase().includes(searchTerm)
+                        (res.seat_code || '').toLowerCase().includes(searchTerm) ||
+                        (res.seat_type || '').toLowerCase().includes(searchTerm) ||
+                        (res.status || '').toLowerCase().includes(searchTerm)
                     );
                 }
                 
@@ -644,19 +635,19 @@
                 hideEmptyState();
                 
                 reservationsList.innerHTML = filteredReservations.map(reservation => `
-                    <div class="reservation-card ${reservation.status || 'active'}">
+                    <div class="reservation-card ${reservation.status}">
                         <div class="reservation-header">
                             <div class="reservation-title">
-                                <h3>${reservation.lecture || 'Design Thinking III'}</h3>
-                                <span class="reservation-id">#${reservation.id.toString().slice(-6)}</span>
+                                <h3>Seat ${reservation.seat_code}</h3>
+                                <span class="reservation-id">#${reservation.id}</span>
                             </div>
                             <div class="reservation-meta">
-                                <span class="reservation-status ${reservation.status || 'active'}">
+                                <span class="reservation-status ${reservation.status}">
                                     <i class="fas fa-circle"></i>
                                     ${getStatusText(reservation.status)}
                                 </span>
                                 <span class="reservation-date">
-                                    ${formatDate(reservation.reservationTime)}
+                                    ${formatDate(reservation.created_at)}
                                 </span>
                             </div>
                         </div>
@@ -664,50 +655,62 @@
                         <div class="reservation-details">
                             <div class="detail-grid">
                                 <div class="detail-item">
-                                    <label><i class="fas fa-map-marker-alt"></i> Location</label>
-                                    <span>${reservation.room || 'N/A'} (Block ${reservation.block}, Floor ${reservation.floor})</span>
-                                </div>
-                                <div class="detail-item">
                                     <label><i class="fas fa-chair"></i> Seat</label>
-                                    <span>${reservation.seat || 'N/A'}</span>
+                                    <span>${reservation.seat_code || 'N/A'}</span>
                                 </div>
                                 <div class="detail-item">
-                                    <label><i class="fas fa-user"></i> Lecturer</label>
-                                    <span>${reservation.lecturer || 'Dr. Tan'}</span>
+                                    <label><i class="fas fa-tag"></i> Type</label>
+                                    <span>${reservation.seat_type || 'standard'}</span>
                                 </div>
                                 <div class="detail-item">
-                                    <label><i class="fas fa-clock"></i> Time</label>
-                                    <span>${reservation.time || 'Today, 9:00-10:00'}</span>
+                                    <label><i class="fas fa-clock"></i> Start</label>
+                                    <span>${reservation.start_time ? formatDate(reservation.start_time) : '-'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label><i class="fas fa-clock"></i> End</label>
+                                    <span>${reservation.end_time ? formatDate(reservation.end_time) : '-'}</span>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="reservation-actions">
                             ${reservation.status !== 'cancelled' ? `
-                                <button class="action-btn modify-btn" onclick="modifyReservation(${reservation.id})">
-                                    <i class="fas fa-edit"></i> Modify
-                                </button>
-                                <button class="action-btn cancel-btn" onclick="cancelReservation(${reservation.id})">
+                                <button class="action-btn cancel-btn" data-id="${reservation.id}">
                                     <i class="fas fa-times"></i> Cancel
                                 </button>
-                            ` : `
-                                <button class="action-btn delete-btn" onclick="deleteReservation(${reservation.id})">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            `}
+                            ` : ''}
                         </div>
                     </div>
                 `).join('');
+
+                // wire cancel buttons
+                reservationsList.querySelectorAll('.cancel-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.currentTarget.getAttribute('data-id');
+                        if(!id) return;
+                        if(!confirm('Cancel this reservation?')) return;
+                        e.currentTarget.disabled = true;
+                        e.currentTarget.textContent = 'Cancelling...';
+                        try {
+                            const res = await Auth.apiFetch('/api/reservations/' + id, { method: 'DELETE' });
+                            if(!res.ok){
+                                const data = await res.json().catch(()=>({}));
+                                showNotification('Cancel failed: ' + (data.detail || res.statusText));
+                            } else {
+                                showNotification('Reservation cancelled.', 'success');
+                            }
+                        } catch(err){
+                            console.error(err);
+                            showNotification('Network error while cancelling');
+                        } finally {
+                            await loadReservations();
+                        }
+                    });
+                });
             }
 
             function formatDate(dateString) {
-                return new Date(dateString).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                return Auth.formatDate(dateString);
             }
 
             function getStatusText(status) {
@@ -739,35 +742,6 @@
                 reservationsList.style.display = 'block';
             }
 
-            function cancelReservation(id) {
-                if (confirm('Are you sure you want to cancel this reservation?')) {
-                    const reservation = allReservations.find(res => res.id === id);
-                    if (reservation) {
-                        reservation.status = 'cancelled';
-                        localStorage.setItem('reservations', JSON.stringify(allReservations));
-                        loadReservations();
-                        showNotification('Reservation cancelled successfully.', 'success');
-                    }
-                }
-            }
-
-            function deleteReservation(id) {
-                if (confirm('Are you sure you want to delete this reservation record?')) {
-                    allReservations = allReservations.filter(res => res.id !== id);
-                    localStorage.setItem('reservations', JSON.stringify(allReservations));
-                    loadReservations();
-                    showNotification('Reservation deleted successfully.', 'success');
-                }
-            }
-
-            function modifyReservation(id) {
-                const reservation = allReservations.find(res => res.id === id);
-                if (reservation) {
-                    localStorage.setItem('currentModification', JSON.stringify(reservation));
-                    window.location.href = 'B03_seat_selection.html';
-                }
-            }
-
             function showNotification(message, type = 'info') {
                 const notification = document.createElement('div');
                 notification.className = `notification ${type}`;
@@ -785,7 +759,12 @@
                     if (notification.parentElement) {
                         notification.remove();
                     }
-                }, 5000);
+                }, 4000);
+            }
+
+            function showError(message){
+                console.error(message);
+                showNotification(message, 'error');
             }
 
             function setupEventListeners() {
@@ -794,9 +773,7 @@
                 dateFilter.addEventListener('change', applyFilters);
             }
 
-            window.cancelReservation = cancelReservation;
-            window.deleteReservation = deleteReservation;
-            window.modifyReservation = modifyReservation;
+            // expose for manual reload if needed
             window.loadReservations = loadReservations;
 
             initPage();

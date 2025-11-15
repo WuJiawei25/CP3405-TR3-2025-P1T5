@@ -46,6 +46,13 @@ def cancel_reservation(reservation_id: int, user: models.User = Depends(get_curr
         raise HTTPException(status_code=404, detail="Reservation not found")
     if r.status == models.ReservationStatus.cancelled:
         return {"ok": True}
+    # To avoid violating UniqueConstraint(seat_id, status) on repeated cycles,
+    # remove any prior cancelled records for this seat before marking this one cancelled.
+    db.query(models.Reservation).filter(
+        models.Reservation.seat_id == r.seat_id,
+        models.Reservation.status == models.ReservationStatus.cancelled,
+        models.Reservation.id != r.id,
+    ).delete(synchronize_session=False)
     r.status = models.ReservationStatus.cancelled
     # free the seat
     seat = r.seat

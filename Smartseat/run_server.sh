@@ -74,17 +74,36 @@ start_server() {
   echo $newpid > "$PIDFILE"
   echo "已启动，PID=$newpid"
   echo "可用命令: tail -f ${LOGFILE} 或 $0 logs"
+  # 健康检查
+  echo "执行启动健康检查..."
+  for i in {1..10}; do
+    sleep 0.5
+    if curl -sS "http://127.0.0.1:${PORT}/" | grep -q '"ok"'; then
+      echo "健康检查通过：后端运行中 http://127.0.0.1:${PORT}/"
+      return
+    fi
+    # 若进程已退出则提前失败
+    if ! kill -0 "$newpid" 2>/dev/null; then
+      echo "进程 PID $newpid 已退出，启动失败。查看日志: $LOGFILE"
+      head -n 60 "$LOGFILE" || true
+      echo "如日志为空，可尝试前台启动: ${UVICORN} backend.main:app --host 127.0.0.1 --port ${PORT} --reload"
+      return 1
+    fi
+  done
+  echo "健康检查未通过：未能在 5 秒内成功响应。请查看日志: $LOGFILE"
+  head -n 60 "$LOGFILE" || true
 }
 
 stop_server() {
-  if [ ! -f "$PIDFILE" ]; then
-    echo "未找到 pid 文件 ($PIDFILE)，服务可能未在运行"
+  local _PIDFILE="${PIDFILE:-backend/uvicorn.pid}"
+  if [ ! -f "$_PIDFILE" ]; then
+    echo "未找到 pid 文件 ($_PIDFILE)，服务可能未在运行"
     return
   fi
-  pid=$(cat "$PIDFILE" 2>/dev/null || echo "")
+  pid=$(cat "$_PIDFILE" 2>/dev/null || echo "")
   if [ -z "$pid" ]; then
     echo "pid 文件为空，移除并退出"
-    rm -f "$PIDFILE"
+    rm -f "$_PIDFILE"
     return
   fi
   if kill -0 "$pid" 2>/dev/null; then
@@ -104,29 +123,31 @@ stop_server() {
   else
     echo "进程 pid=$pid 不存在，移除 pid 文件"
   fi
-  rm -f "$PIDFILE"
+  rm -f "$_PIDFILE"
   echo "已停止"
 }
 
 status_server() {
-  if [ -f "$PIDFILE" ]; then
-    pid=$(cat "$PIDFILE" || echo "")
+  local _PIDFILE="${PIDFILE:-backend/uvicorn.pid}"
+  if [ -f "$_PIDFILE" ]; then
+    pid=$(cat "$_PIDFILE" 2>/dev/null || echo "")
     if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
       echo "服务运行中，PID=$pid"
     else
       echo "pid 文件存在但进程未运行 (pid=$pid)"
     fi
   else
-    echo "服务未运行（找不到 $PIDFILE）"
+    echo "服务未运行（找不到 $_PIDFILE）"
   fi
 }
 
 logs() {
-  if [ ! -f "$LOGFILE" ]; then
-    echo "日志文件不存在: $LOGFILE"
+  local _LOGFILE="${LOGFILE:-backend/uvicorn.log}"
+  if [ ! -f "$_LOGFILE" ]; then
+    echo "日志文件不存在: $_LOGFILE"
     return
   fi
-  tail -n 200 -f "$LOGFILE"
+  tail -n 200 -f "$_LOGFILE"
 }
 
 http_test() {
@@ -150,6 +171,30 @@ case ${1-} in
     ;;
   restart)
     stop_server || true
+    start_server
+    ;;
+  reset)
+    echo "[RESET] Stopping server..."
+    stop_server || true
+    echo "[RESET] Backing up DB if exists..."
+    DB_FILE="backend/../app.db"
+    DB_PATH="$(cd "$(dirname "$DB_FILE")" && pwd)/$(basename "$DB_FILE")"
+    if [ -f "$DB_PATH" ]; then
+      BK="${DB_PATH}.bak.$(date +%Y%m%d%H%M%S)"
+      mv "$DB_PATH" "$BK"
+      echo "[RESET] Moved $DB_PATH -> $BK"
+    else
+      echo "[RESET] No existing DB at $DB_PATH"
+    fi
+    echo "[RESET] Ensuring venv and seeding fresh DB..."
+    ensure_venv
+    "$PYTHON" - <<'PY'
+from backend.database import Base, engine
+Base.metadata.create_all(bind=engine)
+print("created tables")
+PY
+    "$PYTHON" -m backend.seed || true
+    echo "[RESET] Starting server..."
     start_server
     ;;
   status)

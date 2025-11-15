@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
+    <script src="auth.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -24,6 +25,13 @@
     </script>
 </head>
 <body class="bg-white min-h-screen flex flex-col items-center justify-center p-4">
+    <div style="position:absolute;top:1rem;left:1rem;display:flex;gap:0.5rem;">
+        <button class="back-btn" onclick="window.location.href='B02_home.html'">
+            <i class="fa fa-arrow-left"></i> Back to Home
+        </button>
+        <button class="secondary-btn" onclick="Auth.logout()"><i class="fa fa-sign-out"></i> Logout</button>
+    </div>
+
     <div class="mb-8 text-green-500 animate-bounce">
         <i class="fa fa-check-circle text-6xl"></i>
     </div>
@@ -33,8 +41,37 @@
         <span class="absolute -bottom-2 left-0 w-full h-1 bg-primary rounded-full"></span>
     </h1>
     
-    <div class="my-12"></div>
-    
+    <div class="my-6"></div>
+
+    <div id="reservation-card" class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 w-full max-w-2xl" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+            <h2 class="text-xl font-semibold text-gray-800">Reservation Details</h2>
+            <span id="res-status" class="text-sm px-2 py-1 rounded-full"></span>
+        </div>
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;">
+            <div>
+                <div class="text-sm text-gray-500">Seat</div>
+                <div id="res-seat" class="font-medium text-gray-900">-</div>
+            </div>
+            <div>
+                <div class="text-sm text-gray-500">Type</div>
+                <div id="res-type" class="font-medium text-gray-900">-</div>
+            </div>
+            <div>
+                <div class="text-sm text-gray-500">Created</div>
+                <div id="res-created" class="font-medium text-gray-900">-</div>
+            </div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:0.5rem;justify-content:flex-end;">
+            <button id="cancel-btn" class="cancel-btn"><i class="fa fa-times"></i> Cancel Reservation</button>
+            <button class="primary-btn" onclick="window.location.href='B04_check_reservations.html'">
+                <i class="fa fa-list"></i> My Reservations
+            </button>
+        </div>
+    </div>
+
+    <div class="my-6"></div>
+
     <button class="back-button" onclick="window.location.href='B02_home.html'">
         go back to the order page
     </button>
@@ -55,5 +92,65 @@
             </div>
         </div>
     </footer>
+
+    <script>
+    (function(){
+        try { Auth.requireAuth(); } catch(_) { return; }
+        const card = document.getElementById('reservation-card');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const statusPill = document.getElementById('res-status');
+        const seatEl = document.getElementById('res-seat');
+        const typeEl = document.getElementById('res-type');
+        const createdEl = document.getElementById('res-created');
+
+        function setStatusPill(status){
+            statusPill.textContent = status;
+            statusPill.className = 'text-sm px-2 py-1 rounded-full ' + (status==='active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700');
+        }
+
+        async function load(){
+            let r = null;
+            try { r = JSON.parse(localStorage.getItem('last_reservation')||'null'); } catch(_){ r=null; }
+            if(!r){
+                // fallback: fetch my latest
+                try {
+                    const res = await Auth.apiFetch('/api/reservations/mine');
+                    const list = await res.json();
+                    if(Array.isArray(list) && list.length){ r = list[0]; }
+                } catch(_){ /* ignore */ }
+            }
+            if(!r){ return; }
+            seatEl.textContent = r.seat_code || '-';
+            typeEl.textContent = r.seat_type || '-';
+            createdEl.textContent = Auth.formatDate(r.created_at);
+            setStatusPill(r.status || 'active');
+            card.style.display = 'block';
+
+            cancelBtn.disabled = (r.status === 'cancelled');
+            cancelBtn.addEventListener('click', async () => {
+                if(!confirm('Cancel this reservation?')) return;
+                cancelBtn.disabled = true;
+                cancelBtn.textContent = 'Cancelling...';
+                try {
+                    const res = await Auth.apiFetch('/api/reservations/' + r.id, { method: 'DELETE' });
+                    if(!res.ok){
+                        const data = await res.json().catch(()=>({}));
+                        alert('Cancel failed: ' + (data.detail || res.statusText));
+                        cancelBtn.disabled = false; cancelBtn.textContent = 'Cancel Reservation';
+                        return;
+                    }
+                    setStatusPill('cancelled');
+                    localStorage.setItem('last_reservation', JSON.stringify({ ...r, status: 'cancelled' }));
+                    alert('Reservation cancelled');
+                } catch(err){
+                    console.error(err);
+                    alert('Network error while cancelling');
+                    cancelBtn.disabled = false; cancelBtn.textContent = 'Cancel Reservation';
+                }
+            }, { once: true });
+        }
+        load();
+    })();
+    </script>
 </body>
 </html>

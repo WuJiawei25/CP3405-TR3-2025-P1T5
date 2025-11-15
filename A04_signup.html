@@ -82,7 +82,7 @@
         </div>
         <div class="right-section auth-section">
             <div class="auth-container">
-                <form class="signup-form" action="A02_login_student.html" method="get">
+                <form class="signup-form" method="post">
                     <h1 class="auth-title">Sign Up</h1>
 
                     <div class="form-group">
@@ -108,24 +108,64 @@
                     <button type="submit" class="primary-btn signup-btn">
                         Create Account <i class="fas fa-check ml-2"></i>
                     </button>
+                    <div id="signup-status" style="margin-top:8px;font-size:13px;color:#444"></div>
                 </form>
                 <hr class="divider">
                 <div class="login-option">
-                    <p>Already have an account? <a href="A01_signin_credentials.html" class="login-btn">Login</a>
+                    <p>Already have an account? <a href="A01_signin_credentials.html" class="login-btn">Login</a></p>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        document.querySelector('.signup-form').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
+    (function(){
+        const form = document.querySelector('.signup-form');
+        const statusEl = document.getElementById('signup-status');
+        const origin = window.location.origin;
+        const API_BASE = (location.protocol === 'file:' || origin === 'null' || !origin) ? 'http://127.0.0.1:8000' : origin;
+        function setStatus(msg, err){ if(!statusEl)return; statusEl.textContent = msg; statusEl.style.color = err? 'crimson':'#2b7a0b'; }
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            const name = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const pw = document.getElementById('password').value;
+            const pw2 = document.getElementById('confirm-password').value;
+            if(!name || !email || !pw){ setStatus('请完整填写信息 / Please fill all fields', true); return; }
+            if(pw !== pw2){ setStatus('两次密码不一致 / Passwords do not match', true); return; }
+            if(pw.length < 6){ setStatus('密码至少 6 位 / Password must be ≥ 6 chars', true); return; }
+            setStatus('创建账户中... / Creating account...');
+            try {
+                // signup
+                let res = await fetch(API_BASE + '/api/auth/signup', {
+                    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, email, password: pw })
+                });
+                let data = await res.json().catch(()=>({}));
+                if(!res.ok){
+                    const detail = data.detail || ('Signup failed (HTTP '+res.status+')');
+                    setStatus('注册失败: ' + detail, true);
+                    return;
+                }
+                setStatus('账户已创建，自动登录中...');
+                // login
+                res = await fetch(API_BASE + '/api/auth/login', {
+                    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password: pw })
+                });
+                data = await res.json().catch(()=>({}));
+                if(!res.ok){
+                    setStatus('登录失败: ' + (data.detail || res.statusText), true);
+                    return;
+                }
+                const token = data.token;
+                localStorage.setItem('demo_token', token);
+                setStatus('注册并登录成功，正在跳转...');
+                // Redirect to seat selection page (top-level version)
+                window.location.href = 'B03_seat_selection.html';
+            } catch(err){
+                console.error(err);
+                setStatus('网络错误，请确认后端已启动 / Network error: is backend running?', true);
             }
         });
+    })();
     </script>
 </body>
 </html>

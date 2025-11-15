@@ -161,32 +161,32 @@
   },
   {
     "seat_code": "E1",
-    "seat_type": "standard",
+    "seat_type": "accessible",
     "status": "available"
   },
   {
     "seat_code": "E2",
-    "seat_type": "standard",
+    "seat_type": "accessible",
     "status": "available"
   },
   {
     "seat_code": "E3",
-    "seat_type": "standard",
+    "seat_type": "quiet",
     "status": "available"
   },
   {
     "seat_code": "E4",
-    "seat_type": "standard",
+    "seat_type": "quiet",
     "status": "available"
   },
   {
     "seat_code": "E5",
-    "seat_type": "standard",
+    "seat_type": "quiet",
     "status": "available"
   },
   {
     "seat_code": "E6",
-    "seat_type": "standard",
+    "seat_type": "quiet",
     "status": "available"
   },
   {
