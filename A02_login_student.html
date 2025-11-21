@@ -7,6 +7,7 @@
   <title>Smart Seat Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="auth.js"></script>
 </head>
 
 <body>
@@ -30,7 +31,7 @@
 
       <div class="card account-card">
         <img src="Images/account-avatar.png" alt="Hamid's avatar" class="account-avatar">
-        <div class="account-greeting">Welcome back, Hamid</div>
+        <div class="account-greeting" id="account-greeting">Welcome back, (loading)</div>
       </div>
 
       <div class="other-account">
@@ -42,5 +43,14 @@
       </form>
     </div>
   </div>
+  <script>
+    (async function () {
+      try { Auth.requireAuth(); } catch (_) { return; }
+      const user = await Auth.fetchCurrentUser();
+      const greetEl = document.getElementById('account-greeting');
+      if (user && greetEl) { greetEl.textContent = 'Welcome back, ' + (user.name || user.email); }
+    })();
+  </script>
 </body>
+
 </html>

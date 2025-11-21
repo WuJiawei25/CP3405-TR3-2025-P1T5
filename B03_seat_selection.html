@@ -466,19 +466,24 @@
     </footer>
     
     <script>
-    // Minimal boot: token check and room label only. No static/random seats.
+    // 修改位置显示：包含 campus
     (function(){
         try { Auth.requireAuth(); } catch(_) { return; }
         const locationElement = document.getElementById('room-location');
         const roomInfo = JSON.parse(localStorage.getItem('selectedRoomInfo')||'{}');
-        if (locationElement && roomInfo?.room) {
-            locationElement.textContent = roomInfo.room;
-        } else if (locationElement) {
-            locationElement.textContent = 'Location not selected';
+        const campusMap = { singapore: 'Singapore', townsville: 'Townsville', cairns: 'Cairns' };
+        if (locationElement) {
+            if(roomInfo?.room){
+                const campusText = campusMap[roomInfo.campus] ? campusMap[roomInfo.campus] + ' - ' : '';
+                locationElement.textContent = campusText + roomInfo.room;
+            } else {
+                locationElement.textContent = 'Location not selected';
+            }
         }
     })();
     </script>
     <script>
+    // 重构座位渲染逻辑：后端座位按 A,B 左区；C,D 右区；E,F Back Section
     (function(){
         try { Auth.requireAuth(); } catch(_) { return; }
         const API_BASE = Auth.API_BASE;
@@ -487,106 +492,153 @@
         const seatTypeEl = document.getElementById('seat-type');
         const seatSectionEl = document.getElementById('seat-section');
         const seatFeaturesEl = document.getElementById('seat-features');
-        // 在座位图顶部插入“Live Seats (Backend)”区块，带状态与刷新按钮
-        const seatMapSection = document.querySelector('.seat-map-section');
-        const backendSection = document.createElement('div');
-        backendSection.id = 'backend-live-section';
-        backendSection.style.marginBottom = '1rem';
-        backendSection.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 0.75rem 0;">
-                <h4 style="margin:0;font-weight:600;">Live Seats (Backend)</h4>
-                <div style="display:flex;align-items:center;gap:0.5rem;">
-                    <span id="backend-seat-status" style="font-size:0.9rem;color:#6b7280;">加载中…</span>
-                    <button id="backend-seat-refresh" class="secondary-btn" style="padding:0.35rem 0.6rem;">刷新座位</button>
-                </div>
-            </div>
-            <div id="backend-seat-grid" style="display:grid;grid-template-columns:repeat(8,2.5rem);gap:0.4rem;justify-content:center"></div>
-        `;
-        seatMapSection.insertBefore(backendSection, seatMapSection.firstChild);
-        const statusEl = document.getElementById('backend-seat-status');
-        const refreshBtn = document.getElementById('backend-seat-refresh');
-        const backendSeatGrid = document.getElementById('backend-seat-grid');
 
-        let selectedBackendSeat = null;
+        const leftGrid = document.getElementById('left-seats-grid');
+        const rightGrid = document.getElementById('right-seats-grid');
+        const backGrid = document.getElementById('platform-seats-grid');
+        const filterButtons = document.querySelectorAll('.filter-button');
 
-        function setStatus(kind, extra){
-            if(!statusEl) return;
-            switch(kind){
-                case 'loading': statusEl.textContent = '加载中…'; statusEl.style.color = '#6b7280'; break;
-                case 'empty': statusEl.textContent = '暂无座位数据，请稍后重试'; statusEl.style.color = '#9ca3af'; break;
-                case 'error': statusEl.textContent = '无法连接后端，请确认后端已启动'; statusEl.style.color = '#dc2626'; break;
-                case 'ok': statusEl.textContent = '已加载'; statusEl.style.color = '#059669'; break;
-                default: statusEl.textContent = extra || ''; break;
-            }
-        }
+        let seatCache = [];
+        let selectedSeatCode = null;
+        let currentFilter = 'all';
 
         function seatFeaturesForType(t){
             switch(t){
                 case 'accessible': return 'Wheelchair access, extra space';
-                case 'quiet': return 'Reduced noise, good focus';
-                default: return 'Standard visibility & power';
+                case 'quiet': return 'Reduced noise, focus zone';
+                default: return 'Standard seat';
             }
         }
 
-        async function loadBackendSeats(){
-            setStatus('loading');
+        function mapSection(rowLetter){
+            if(['A','B','G','H'].includes(rowLetter)) return {container: leftGrid, sectionLabel:'Left Section'};
+            if(['C','D','I','J'].includes(rowLetter)) return {container: rightGrid, sectionLabel:'Right Section'};
+            return {container: backGrid, sectionLabel:'Back Section'}; // E,F,K,L 及其它
+        }
+
+        function clearGrids(){ leftGrid.innerHTML=''; rightGrid.innerHTML=''; backGrid.innerHTML=''; }
+
+        function createSeatElement(seat){
+            const div = document.createElement('div');
+            div.className = 'seat ' + (seat.status === 'available' ? 'available' : 'booked');
+            div.textContent = seat.seat_code;
+            div.dataset.code = seat.seat_code;
+            div.dataset.type = seat.seat_type;
+            div.dataset.status = seat.status;
+            div.title = seat.seat_code + ' (' + seat.seat_type + ', ' + seat.status + ')';
+            if(seat.seat_type === 'accessible'){
+                div.classList.add('accessible');
+                div.innerHTML = '<span class="seat-icon"><i class="fa fa-wheelchair"></i></span>';
+            } else if(seat.seat_type === 'quiet'){
+                div.classList.add('quiet');
+                div.innerHTML = '<span class="seat-icon"><i class="fa fa-volume-off"></i></span>';
+            }
+            div.addEventListener('click', () => {
+                if(div.classList.contains('booked')) return;
+                // 取消之前选中
+                document.querySelectorAll('.seat.selected').forEach(s => s.classList.remove('selected'));
+                div.classList.add('selected');
+                selectedSeatCode = seat.seat_code;
+                selectedSeatNumber.textContent = seat.seat_code;
+                seatTypeEl.textContent = seat.seat_type;
+                seatSectionEl.textContent = mapSection(seat.seat_code.charAt(0)).sectionLabel;
+                seatFeaturesEl.textContent = seatFeaturesForType(seat.seat_type);
+                confirmSeatBtn.disabled = false;
+            });
+            return div;
+        }
+
+        function applyFilter(){
+            const seats = document.querySelectorAll('.seat');
+            seats.forEach(seat => {
+                if(seat.classList.contains('booked')){
+                    seat.style.display = 'block'; // 始终显示已预订以提示占用
+                    return;
+                }
+                const type = seat.dataset.type;
+                const show = currentFilter === 'all' || type === currentFilter;
+                seat.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                applyFilter();
+            });
+        });
+
+        async function loadSeats(){
             try {
                 const res = await fetch(API_BASE + '/api/seats');
                 const data = await res.json().catch(()=>[]);
-                if(!res.ok){ console.warn('Failed to load seats', data); setStatus('error'); backendSeatGrid.innerHTML=''; return; }
-                backendSeatGrid.innerHTML='';
-                if(!Array.isArray(data) || data.length===0){ setStatus('empty'); return; }
-                data.forEach(seat => {
-                    const div = document.createElement('div');
-                    div.className = 'seat ' + (seat.status === 'available' ? 'available' : 'booked');
-                    div.textContent = seat.seat_code;
-                    div.dataset.code = seat.seat_code;
-                    div.dataset.type = seat.seat_type;
-                    div.title = seat.seat_code + ' (' + seat.seat_type + ', ' + seat.status + ')';
-                    div.addEventListener('click', () => {
-                        if(div.classList.contains('booked')) return;
-                        if(selectedBackendSeat && selectedBackendSeat!==div){
-                            selectedBackendSeat.classList.remove('selected');
-                        }
-                        div.classList.toggle('selected');
-                        selectedBackendSeat = div.classList.contains('selected') ? div : null;
-                        if(selectedBackendSeat){
-                            selectedSeatNumber.textContent = selectedBackendSeat.dataset.code;
-                            seatTypeEl.textContent = selectedBackendSeat.dataset.type;
-                            seatSectionEl.textContent = 'N/A';
-                            seatFeaturesEl.textContent = seatFeaturesForType(selectedBackendSeat.dataset.type);
-                            confirmSeatBtn.disabled = false;
-                        } else {
-                            selectedSeatNumber.textContent = 'Not selected';
-                            seatTypeEl.textContent = 'Not selected';
-                            seatSectionEl.textContent = 'Not selected';
-                            seatFeaturesEl.textContent = 'Not selected';
-                            confirmSeatBtn.disabled = true;
-                        }
-                    });
-                    backendSeatGrid.appendChild(div);
+                if(!res.ok){ console.warn('Failed to load seats', data); return; }
+                seatCache = Array.isArray(data)? data: [];
+                renderSeats();
+            } catch(err){ console.error('Seat fetch error', err); }
+        }
+
+        function renderSeats(){
+            clearGrids();
+            // 按字母排序，方便布局
+            const sorted = [...seatCache].sort((a,b)=> a.seat_code.localeCompare(b.seat_code));
+            // 按行分组，每行显示为一个 seat-row
+            const grouped = {};
+            sorted.forEach(seat => {
+                const row = seat.seat_code.charAt(0).toUpperCase();
+                if(!grouped[row]) grouped[row] = [];
+                grouped[row].push(seat);
+            });
+            Object.keys(grouped).forEach(rowLetter => {
+                const {container} = mapSection(rowLetter);
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+                grouped[rowLetter].forEach(seat => {
+                    const el = createSeatElement(seat);
+                    rowDiv.appendChild(el);
                 });
-                setStatus('ok');
-            } catch(err){ console.warn('Seat fetch error', err); setStatus('error'); backendSeatGrid.innerHTML=''; }
+                container.appendChild(rowDiv);
+            });
+            applyFilter();
+            // 保持选中状态（若仍存在且未被预订）
+            if(selectedSeatCode){
+                const match = document.querySelector(`.seat[data-code="${selectedSeatCode}"]`);
+                if(match && match.dataset.status === 'available'){
+                    match.classList.add('selected');
+                } else {
+                    // 已被预订或不存在，重置
+                    selectedSeatCode = null;
+                    selectedSeatNumber.textContent = 'Not selected';
+                    seatTypeEl.textContent = 'Not selected';
+                    seatSectionEl.textContent = 'Not selected';
+                    seatFeaturesEl.textContent = 'Not selected';
+                    confirmSeatBtn.disabled = true;
+                }
+            }
+            // 更新座位总数显示
+            const totalSeats = sorted.length;
+            const availableSeats = sorted.filter(s => s.status === 'available').length;
+            const bookedSeats = totalSeats - availableSeats;
+            document.querySelector('.lecture-details span:nth-child(8)').textContent = `${availableSeats} seats available`;
         }
 
         async function createReservation(){
             try { Auth.requireAuth(); } catch(_) { return; }
-            const code = selectedSeatNumber.textContent.trim();
-            if(!code || code==='Not selected'){ alert('请选择一个可用座位'); return; }
+            const code = selectedSeatCode;
+            if(!code){ alert('请选择一个可用座位'); return; }
             confirmSeatBtn.disabled = true;
             const originalText = confirmSeatBtn.textContent;
             confirmSeatBtn.textContent = '处理中…';
             try {
-                const res = await Auth.apiFetch('/api/reservations', {
-                    method:'POST', body: JSON.stringify({ seat_code: code })
-                });
+                const res = await Auth.apiFetch('/api/reservations', { method:'POST', body: JSON.stringify({ seat_code: code }) });
                 const data = await res.json().catch(()=>({}));
                 if(!res.ok){
-                    alert('预订失败: ' + (data.detail || res.statusText));
+                    alert('预约失败: ' + (data.detail || res.statusText));
                     confirmSeatBtn.disabled = false;
                     confirmSeatBtn.textContent = originalText;
-                    await loadBackendSeats();
+                    await loadSeats();
                     return;
                 }
                 localStorage.setItem('last_reservation', JSON.stringify(data));
@@ -599,26 +651,10 @@
             }
         }
 
-        refreshBtn.addEventListener('click', (e)=>{ e.preventDefault(); loadBackendSeats(); });
         confirmSeatBtn.addEventListener('click', (e)=>{ e.preventDefault(); createReservation(); });
 
-        loadBackendSeats();
-        setInterval(loadBackendSeats, 30000);
-
-        // 过滤按钮：基于 data-type 显示/隐藏
-        const filterButtons = document.querySelectorAll('.filter-button');
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const filter = btn.getAttribute('data-filter');
-                backendSeatGrid.querySelectorAll('.seat').forEach(seat => {
-                    if (seat.classList.contains('booked')){ seat.style.display = 'block'; return; }
-                    const shouldShow = filter === 'all' || seat.dataset.type === filter;
-                    seat.style.display = shouldShow ? 'block' : 'none';
-                });
-            });
-        });
+        loadSeats();
+        setInterval(loadSeats, 30000); // 每30秒刷新
     })();
     </script>
 </body>

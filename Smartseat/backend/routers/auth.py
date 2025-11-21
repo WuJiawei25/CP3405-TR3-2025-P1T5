@@ -61,3 +61,7 @@ def get_current_user(authorization: Optional[str] = Header(None), db: Session = 
     if not token:
         raise HTTPException(status_code=401, detail="Invalid token")
     return token.user
+
+@router.get("/me", response_model=schemas.UserOut)
+def me(user: models.User = Depends(get_current_user)):
+    return user

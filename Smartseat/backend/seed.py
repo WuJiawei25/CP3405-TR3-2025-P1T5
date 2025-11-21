@@ -34,15 +34,16 @@ def run():
     Base.metadata.create_all(bind=engine)
     db: Session = SessionLocal()
     try:
-        # migrate/normalize existing rows first
         _coerce_seat_enums(db)
-
-        # desired seat meta from JSON (used to set types on existing seats too)
         data = json.loads(Path(__file__).with_name("seat_seed.json").read_text(encoding="utf-8"))
         desired_by_code = {s["seat_code"]: s for s in data}
 
-        # Only seed if no seats
-        if db.query(models.Seat).count() == 0:
+        existing = {s.seat_code: s for s in db.query(models.Seat).all()}
+        inserted = 0
+        updated_type = 0
+
+        # 如果数据库为空保持原始批量插入逻辑
+        if not existing:
             for s in data:
                 seat = models.Seat(
                     seat_code=s["seat_code"],
@@ -53,23 +54,34 @@ def run():
             db.commit()
             print(f"Seeded {len(data)} seats")
         else:
-            # Align seat_type to JSON for existing seats (do not override status here)
-            seats = db.query(models.Seat).all()
-            updates = 0
-            for s in seats:
-                d = desired_by_code.get(s.seat_code)
-                if not d:
-                    continue
-                desired_type = models.SeatType(d["seat_type"])
-                current_type = s.seat_type if hasattr(s.seat_type, "value") else models.SeatType(s.seat_type)
-                if current_type != desired_type:
-                    s.seat_type = desired_type
-                    updates += 1
-            if updates:
+            # 增量插入缺失座位
+            for code, meta in desired_by_code.items():
+                if code not in existing:
+                    seat = models.Seat(
+                        seat_code=meta["seat_code"],
+                        seat_type=models.SeatType(meta["seat_type"]),
+                        status=models.SeatStatus(meta["status"]),
+                    )
+                    db.add(seat)
+                    inserted += 1
+            if inserted:
                 db.commit()
-                print(f"Aligned seat_type for {updates} seats from JSON meta")
-            else:
-                print("Seats already present; normalized and skip seeding.")
+                print(f"Inserted {inserted} new seats")
+            # 对已有座位仅同步 seat_type（不覆盖 status）
+            for code, seat in existing.items():
+                meta = desired_by_code.get(code)
+                if not meta:
+                    continue
+                desired_type = models.SeatType(meta["seat_type"])
+                current_type = seat.seat_type if hasattr(seat.seat_type, "value") else models.SeatType(seat.seat_type)
+                if current_type != desired_type:
+                    seat.seat_type = desired_type
+                    updated_type += 1
+            if updated_type:
+                db.commit()
+                print(f"Aligned seat_type for {updated_type} existing seats")
+            if not inserted and not updated_type:
+                print("Seats already present; normalized and no new changes.")
     finally:
         db.close()
 

@@ -1,35 +1,19 @@
 INFO:     Will watch for changes in these directories: ['/Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [5870] using WatchFiles
-INFO:     Started server process [5873]
+INFO:     Started reloader process [33495] using WatchFiles
+INFO:     Started server process [33498]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:58653 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58654 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58655 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58656 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58657 - "OPTIONS /api/reservations HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58657 - "POST /api/reservations HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58664 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58665 - "OPTIONS /api/reservations/mine HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58665 - "GET /api/reservations/mine HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58666 - "OPTIONS /api/reservations/1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58666 - "DELETE /api/reservations/1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58666 - "GET /api/reservations/mine HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58666 - "GET /api/reservations/mine HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58669 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58680 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58698 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58714 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58740 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58767 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58786 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58804 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58810 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58826 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58832 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58845 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58888 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58933 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58945 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58963 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53392 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53393 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53394 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53395 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53410 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53416 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53420 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53432 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53438 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53446 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53453 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53458 - "GET /api/reservations/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53461 - "GET /api/seats HTTP/1.1" 200 OK

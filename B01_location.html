@@ -162,6 +162,7 @@
             transform: translateY(-2px);
         }
     </style>
+    <script src="auth.js"></script>
 </head>
 <body>
     <div class="container">
@@ -243,10 +244,13 @@
             cairns: "https://maps.google.com/maps?q=James+Cook+University+Cairns"
         };
 
+        let currentCampus = 'singapore';
         campusBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const campus = btn.getAttribute('data-campus');
-                
+                currentCampus = campus;
+                localStorage.setItem('selectedCampus', campus);
+
                 campusBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
@@ -360,6 +364,14 @@
                 activeMap.style.transform = `scale(${scale}) translate(${translateX/scale}px, ${translateY/scale}px)`;
             }
         }
+
+        // 确认按钮：确保已选择 campus
+        document.querySelector('.confirm-btn').addEventListener('click', (e)=>{
+            e.preventDefault();
+            if(!currentCampus){ alert('Please select a campus first'); return; }
+            localStorage.setItem('selectedCampus', currentCampus);
+            window.location.href='B06_room_selection.html';
+        });
     </script>
 </body>
 </html>

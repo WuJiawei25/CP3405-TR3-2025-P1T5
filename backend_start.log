@@ -62,4 +62,194 @@ Seats already present; normalized and skip seeding.
 默认访问地址：http://127.0.0.1:8000/
 本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
 ----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-17 10:46:53
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+./run_server.sh: line 59: pid�: unbound variable
+
+[ERROR] 启动过程中发生错误 (code=1)。上方输出与 /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log 可用于排查。
+按回车关闭窗口...========================================
+[START] 2025-11-17 12:36:50
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=18418
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=18418
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-17 12:39:12
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=18576
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=18576
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-17 12:58:11
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=18875
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=18875
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-21 12:58:46
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+./run_server.sh: line 59: pid�: unbound variable
+
+[ERROR] 启动过程中发生错误 (code=1)。上方输出与 /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log 可用于排查。
+按回车关闭窗口...========================================
+[START] 2025-11-21 13:42:41
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Seats already present; normalized and skip seeding.
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=32692
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=32692
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
+按回车关闭此窗口（服务仍在后台运行）...========================================
+[START] 2025-11-21 14:07:42
+PWD: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5
+USER: chongyuang
+BASH: 3.2.57(1)-release
+[INFO] 使用脚本: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat/run_server.sh
+[STEP] 安装依赖与初始化虚拟环境 (setup)
+使用已存在虚拟环境: backend/.venv/bin/python
+[STEP] 启动后端服务 (start)
+使用已存在虚拟环境: backend/.venv/bin/python
+运行 seed（填充 seats，如果尚未存在）
+Inserted 48 new seats
+启动 uvicorn，写入日志到: backend/uvicorn.log，端口: 8000
+已启动，PID=33495
+可用命令: tail -f backend/uvicorn.log 或 ./run_server.sh logs
+执行启动健康检查...
+健康检查通过：后端运行中 http://127.0.0.1:8000/
+[STEP] 查询服务状态 (status)
+服务运行中，PID=33495
+[STEP] 健康检查: GET / 与 GET /api/seats (PORT=8000)
+- / ->
+{"ok":true,"service":"take-a-seat","docs":"/docs"}
+- /api/seats ->
+[{"id":1,"seat_code":"A1","seat_type":"standard","status":"available"},{"id":2,"seat_code":"A2","seat_type":"standard","status":"available"},{"id":3,"seat_code":"A3","seat_type":"standard","status":"booked"},{"id":4,"seat_code":"A4","seat_type":"standard","status":"booked"},{"id":5,"seat_code":"A5","seat_type":"standard","status":"available"},{"id":6,"seat_code":"A6","seat_type":"standard","status
+----------------------------------------
+后端已尝试启动。
+- 查看日志：  Smartseat/backend/uvicorn.log (或执行: bash Smartseat/run_server.sh logs)
+- 快速测试：  bash Smartseat/run_server.sh test
+- 停止服务：  ./stop_backend.command 或 bash Smartseat/run_server.sh stop
+默认访问地址：http://127.0.0.1:8000/
+本次启动输出也已保存到: /Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/backend_start.log
+----------------------------------------
 按回车关闭此窗口（服务仍在后台运行）...

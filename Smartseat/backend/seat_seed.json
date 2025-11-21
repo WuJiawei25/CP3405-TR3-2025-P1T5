@@ -238,5 +238,245 @@
     "seat_code": "F8",
     "seat_type": "standard",
     "status": "available"
+  },
+  {
+    "seat_code": "G1",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G2",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G3",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G4",
+    "seat_type": "standard",
+    "status": "booked"
+  },
+  {
+    "seat_code": "G5",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G6",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G7",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "G8",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "H1",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "H2",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "H3",
+    "seat_type": "accessible",
+    "status": "available"
+  },
+  {
+    "seat_code": "H4",
+    "seat_type": "accessible",
+    "status": "available"
+  },
+  {
+    "seat_code": "H5",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "H6",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "H7",
+    "seat_type": "standard",
+    "status": "booked"
+  },
+  {
+    "seat_code": "H8",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I1",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I2",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I3",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I4",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I5",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I6",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I7",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "I8",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "J1",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "J2",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "J3",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "J4",
+    "seat_type": "standard",
+    "status": "booked"
+  },
+  {
+    "seat_code": "J5",
+    "seat_type": "standard",
+    "status": "booked"
+  },
+  {
+    "seat_code": "J6",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "J7",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "J8",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "K1",
+    "seat_type": "accessible",
+    "status": "available"
+  },
+  {
+    "seat_code": "K2",
+    "seat_type": "accessible",
+    "status": "available"
+  },
+  {
+    "seat_code": "K3",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "K4",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "K5",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "K6",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "K7",
+    "seat_type": "quiet",
+    "status": "available"
+  },
+  {
+    "seat_code": "K8",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L1",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L2",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L3",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L4",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L5",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L6",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L7",
+    "seat_type": "standard",
+    "status": "available"
+  },
+  {
+    "seat_code": "L8",
+    "seat_type": "standard",
+    "status": "booked"
   }
 ]
