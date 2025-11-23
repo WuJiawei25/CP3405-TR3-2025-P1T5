@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: Smartseat/backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Seed database
+        working-directory: Smartseat/backend
+        run: |
+          python seed.py
+
+      - name: Run smoke test
+        working-directory: Smartseat/backend
+        run: |
+          python tests_smoke.py
+
+      - name: Run simple test
+        working-directory: Smartseat/backend
+        run: |
+          python tests_simple.py
+
+      - name: Archive logs (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uvicorn-logs
+          path: Smartseat/backend/uvicorn.log
+          if-no-files-found: ignore
+
