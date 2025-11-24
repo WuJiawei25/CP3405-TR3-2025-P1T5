@@ -1,19 +1,48 @@
 INFO:     Will watch for changes in these directories: ['/Users/chongyuang/Desktop/CP3405 Design ThinkingIII/P1T5/Smartseat']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [33495] using WatchFiles
-INFO:     Started server process [33498]
+INFO:     Started reloader process [49613] using WatchFiles
+INFO:     Started server process [49616]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     127.0.0.1:53392 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53393 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53394 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53395 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53410 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53416 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53420 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53432 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53438 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53446 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53453 - "GET /api/seats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53458 - "GET /api/reservations/mine HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53461 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55018 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55020 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55021 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55047 - "OPTIONS /api/auth/signup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55047 - "POST /api/auth/signup HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:55069 - "POST /api/auth/signup HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:55069 - "POST /api/auth/signup HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55069 - "POST /api/auth/signup HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55074 - "POST /api/auth/signup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55074 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55074 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55084 - "POST /api/auth/signup HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:55104 - "POST /api/auth/signup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55104 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55107 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55109 - "POST /api/reservations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55109 - "GET /api/reservations/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55117 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55118 - "POST /api/reservations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55118 - "GET /api/reservations/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55119 - "OPTIONS /api/reservations/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55119 - "DELETE /api/reservations/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55119 - "GET /api/reservations/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55125 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55133 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55133 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55133 - "GET /demo/lecturer_data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55340 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55340 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55340 - "OPTIONS /demo/lecturer_data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55340 - "GET /demo/lecturer_data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55347 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55352 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55363 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55397 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55410 - "GET /api/seats HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [49616]
+INFO:     Stopping reloader process [49613]

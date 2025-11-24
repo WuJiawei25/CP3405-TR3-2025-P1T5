@@ -41,3 +41,53 @@ class ReservationOut(BaseModel):
     start_time: datetime
     end_time: Optional[datetime]
     created_at: datetime
+
+class ForecastDBRequest(BaseModel):
+    series_name: str
+    steps: int = 12
+    order: Optional[List[int]] = None  # [p,d,q]
+    seasonal_order: Optional[List[int]] = None  # [P,D,Q,m]
+    freq: Optional[str] = None  # e.g., 'M'
+
+class ForecastPoint(BaseModel):
+    ts: datetime
+    yhat: float
+    yhat_lower: Optional[float] = None
+    yhat_upper: Optional[float] = None
+
+class ForecastDBResponse(BaseModel):
+    run_id: int
+    series_name: str
+    steps: int
+    points: List[ForecastPoint]
+
+class TimeSeriesPointIn(BaseModel):
+    ts: datetime
+    value: float
+
+class UpsertSeriesRequest(BaseModel):
+    series_name: str
+    points: List[TimeSeriesPointIn]
+    replace: Optional[bool] = False
+
+class UpsertSeriesResponse(BaseModel):
+    series_name: str
+    inserted: int
+    updated: int
+    total: int
+
+class AggregationRequest(BaseModel):
+    series_daily: Optional[str] = 'seat_usage_daily'
+    series_weekly: Optional[str] = 'seat_usage_weekly'
+    lookback_days: int = 60
+    lookback_weeks: int = 12
+
+class AggregationOutcome(BaseModel):
+    daily_points: int
+    weekly_points: int
+
+class AggregationResponse(BaseModel):
+    series_daily: Optional[str]
+    series_weekly: Optional[str]
+    outcome: AggregationOutcome
+    ran_at: datetime
